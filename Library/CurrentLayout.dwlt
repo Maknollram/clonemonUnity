@@ -110,7 +110,7 @@ MonoBehaviour:
   m_MinSize: {x: 713, y: 492}
   m_MaxSize: {x: 18008, y: 14042}
   vertical: 0
-  controlID: 24708
+  controlID: 4769
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -134,7 +134,7 @@ MonoBehaviour:
   m_MinSize: {x: 232, y: 492}
   m_MaxSize: {x: 10002, y: 14042}
   vertical: 1
-  controlID: 24625
+  controlID: 4791
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -209,7 +209,7 @@ MonoBehaviour:
   m_MinSize: {x: 204, y: 421}
   m_MaxSize: {x: 4004, y: 8021}
   vertical: 1
-  controlID: 24709
+  controlID: 4770
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -394,9 +394,9 @@ MonoBehaviour:
   m_PersistentViewDataDictionary: {fileID: 0}
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 70110000
+    m_SelectedIDs: 821c0000
     m_LastClickedID: 0
-    m_ExpandedIDs: acdbfbff0e5cfcffe4fbffff00000000702000009a200000a4200000fc200000162100002e2100004021000068210000
+    m_ExpandedIDs: dcfbffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -457,20 +457,20 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Game/Resources/Moves
+    - Assets/Game/Resources/Monsters
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Game/Resources/Moves
+  - Assets/Game/Resources/Monsters
   m_LastFoldersGridSize: -1
-  m_LastProjectPath: C:\Users\Maknollram\Documents\Captura
+  m_LastProjectPath: C:\Users\Maknollram\Documents\Clonemon
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 70}
-    m_SelectedIDs: 740e0000
-    m_LastClickedID: 3700
-    m_ExpandedIDs: 0000000060090000a40900004a0e0000640f0000b61000005c1c000000ca9a3b
+    m_SelectedIDs: 320d0000
+    m_LastClickedID: 3378
+    m_ExpandedIDs: 0000000068090000ac0900005a0e0000740f0000c61000006c1c000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -498,7 +498,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000060090000a40900004a0e0000640f0000b61000005c1c000000ca9a3b
+    m_ExpandedIDs: 0000000068090000ac0900005a0e0000740f0000c61000006c1c000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -575,7 +575,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 635
-    width: 458
+    width: 600
     height: 383
   m_PersistentViewDataDictionary: {fileID: 0}
 --- !u!114 &17
@@ -609,9 +609,9 @@ MonoBehaviour:
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -14.323323, y: 3.9987352, z: -0.033444542}
+    m_Target: {x: -11.640816, y: 5.645643, z: -0.08184038}
     speed: 2
-    m_Value: {x: -14.323323, y: 3.9987352, z: -0.033444542}
+    m_Value: {x: -11.640816, y: 5.645643, z: -0.08184038}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -643,9 +643,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 6.9751334
+    m_Target: 11.807064
     speed: 2
-    m_Value: 6.9751334
+    m_Value: 11.807064
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -782,7 +782,7 @@ MonoBehaviour:
   m_AnimEditor: {fileID: 0}
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: -287568
+  m_LastSelectedObjectID: 8604
 --- !u!114 &20
 MonoBehaviour:
   m_ObjectHideFlags: 52

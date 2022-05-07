@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Chicotada
   description: "Chicotes que batem com for\xE7a em seus oponente."
-  type: 10
+  type: 4
   power: 45
   accuracy: 100
   sp: 20

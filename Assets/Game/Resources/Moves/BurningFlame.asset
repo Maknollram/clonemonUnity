@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Chama Ardente
   description: Bafo de fogo que queima qualquer inimigo.
-  type: 5
+  type: 4
   power: 20
   accuracy: 100
   sp: 20

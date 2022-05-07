@@ -31,7 +31,6 @@ public class BattleSystem : MonoBehaviour {
     dialogBox.SetMoveNames(playerUnit.Monster.Moves);
 
     yield return dialogBox.TypeDialog("Um " + enemyUnit.Monster.Base.Name + " selvagem apareceu.");
-    yield return new WaitForSeconds(1f);
 
     PlayerAction();
   }
@@ -56,16 +55,15 @@ public class BattleSystem : MonoBehaviour {
     state = BattleState.Busy;
 
     var move = playerUnit.Monster.Moves[currentMove];
-    yield return dialogBox.TypeDialog(playerUnit.Monster.Base.Name + " used " + move.Base.Name);
+    yield return dialogBox.TypeDialog(playerUnit.Monster.Base.Name + " usou " + move.Base.Name + ".");
 
-    yield return new WaitForSeconds(1f);
-
-    bool isFainted = enemyUnit.Monster.TakeDamage(move, playerUnit.Monster);
+    var damageDetails = enemyUnit.Monster.TakeDamage(move, playerUnit.Monster);
     yield return enemyHud.UpdateHP();
+    yield return ShowDamageDetails(enemyUnit, damageDetails);
 
-    if (isFainted)
+    if (damageDetails.Fainted)
     {
-      yield return dialogBox.TypeDialog(enemyUnit.Monster.Base.Name + " fainted");
+      yield return dialogBox.TypeDialog(enemyUnit.Monster.Base.Name + " morreu!");
     }
     else
     {
@@ -79,21 +77,36 @@ public class BattleSystem : MonoBehaviour {
 
     var move = enemyUnit.Monster.GetRandomMove();
 
-    yield return dialogBox.TypeDialog(enemyUnit.Monster.Base.Name + " used " + move.Base.Name);
+    yield return dialogBox.TypeDialog(enemyUnit.Monster.Base.Name + " usou " + move.Base.Name + ".");
 
-    yield return new WaitForSeconds(1f);
-
-    bool isFainted = playerUnit.Monster.TakeDamage(move, playerUnit.Monster);
+    var damageDetails = playerUnit.Monster.TakeDamage(move, playerUnit.Monster);
     yield return playerHud.UpdateHP();
+    yield return ShowDamageDetails(playerUnit, damageDetails);
 
-    if (isFainted)
+    if (damageDetails.Fainted)
     {
-      yield return dialogBox.TypeDialog(playerUnit.Monster.Base.Name + " fainted");
+      yield return dialogBox.TypeDialog(playerUnit.Monster.Base.Name + " morreu!");
     }
     else
     {
       PlayerAction();
     }
+  }
+
+  IEnumerator ShowDamageDetails(BattleUnit battleUnit, DamageDetails damageDetails)
+  {
+    Debug.Log(damageDetails.TypeEffectiveness);
+    if (damageDetails.Critical > 1f)
+      yield return dialogBox.TypeDialog(battleUnit.Monster.Base.Name + " recebeu um ataque crítico!");
+
+    if (damageDetails.TypeEffectiveness <= 0f)
+      yield return dialogBox.TypeDialog("Este ataque não afetou " + battleUnit.Monster.Base.Name + "!");
+    else if (damageDetails.TypeEffectiveness > 1f && damageDetails.TypeEffectiveness <= 1.25f)
+      yield return dialogBox.TypeDialog(battleUnit.Monster.Base.Name + " recebeu o ataque de um Deus!");
+    else if (damageDetails.TypeEffectiveness > 1.25f)
+      yield return dialogBox.TypeDialog(battleUnit.Monster.Base.Name + " recebeu um ataque muito forte!");
+    else if (damageDetails.TypeEffectiveness < 1f)
+      yield return dialogBox.TypeDialog(battleUnit.Monster.Base.Name + " recebeu um ataque muito fraco!");
   }
 
   private void Update()

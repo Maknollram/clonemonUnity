@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: "Arranh\xE3o"
   description: Unhas afiadas cortam o inimigo suavemente.
-  type: 14
+  type: 3
   power: 30
   accuracy: 100
   sp: 25

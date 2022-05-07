@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -97,41 +97,92 @@ public class LearnableMove
 public enum MonsterType
 {
   // None,
-  // Bug,
-  // Dark, 
-  // Dragon,
-  // Eletric,
-  // Fairy,
-  // Fighting,
-  // Fire,
-  // Flying,
-  // Ghost,
-  // Grass,
-  // Ground,
-  // Ice,
   // Normal,
+  // Fire,
+  // Water,
+  // Eletric,
+  // Grass,
+  // Ice,
+  // Fighting,
   // Poison,
+  // Ground,
+  // Flying,
   // Psychic,
+  // Bug,
   // Rock,
+  // Ghost,
+  // Dragon,
+  // Dark, 
   // Steel,
-  // Water
+  // Fairy
+
   None,
-  Água,
-  Dragão,
-  Elétrico,
-  Fada,
-  Fantasma,
+  Choque,/*elétrico*//*virtual*/
+  Deus,
+  Fluido,/*água*//*gelo*/
   Fogo,
-  Gelo,
   Inseto,
   Lutador,
-  Metálico,
-  Normal,
-  Pedra,
+  Luz,/*fada*/
+  Metal,/*máquina*//*mecânico*/
+  Negro,/*fantasma*/
+  Neutro,
   Planta,
-  Psíquico,
-  Sombrio, 
-  Terra,
-  Venenoso,
+  Terra,/*pedra*/
   Voador
+}
+
+public class TypeChart
+{
+  static float [][] chart =
+  {
+    //Has to be same order as PokemonType class
+    //                       Nor   Fir   Wat   Ele   Gra   Ice   Fig   Poi   Gro   Fly   Psy   Bug   Roc   Gho   Dra   Dar  Ste    Fai
+    // /*Normal*/  new float[] {1f,   1f,   1f,   1f,   1f,   1f,   1f,   1f,   1f,   1f,   1f,   1f,   0.5f, 0,    1f,   1f,   0.5f, 1f},
+    // /*Fire*/    new float[] {1f,   0.5f, 0.5f, 1f,   2f,   2f,   1f,   1f,   1f,   1f,   1f,   2f,   0.5f, 1f,   0.5f, 1f,   2f,   1f},
+    // /*Water*/   new float[] {1f,   2f,   0.5f, 1f,   0.5f, 1f,   1f,   1f,   2f,   1f,   1f,   1f,   2f,   1f,   0.5f, 1f,   1f,   1f},
+    // /*Electric*/new float[] {1f,   1f,   2f,   0.5f, 0.5f, 1f,   1f,   1f,   0f,   2f,   1f,   1f,   1f,   1f,   0.5f, 1f,   1f,   1f},
+    // /*Grass*/   new float[] {1f,   0.5f, 2f,   1f,   0.5f, 1f,   1f,   0.5f, 2f,   0.5f, 1f,   0.5f, 2f,   1f,   0.5f, 1f,   0.5f, 1f},
+    // /*Ice*/     new float[] {1f,   0.5f, 0.5f, 1f,   2f,   0.5f, 1f,   1f,   2f,   2f,   1f,   1f,   1f,   1f,   2f,   1f,   0.5f, 1f},
+    // /*Fighting*/new float[] {2f,   1f,   1f,   1f,   1f,   2f,   1f,   0.5f, 1f,   0.5f, 0.5f, 0.5f, 2f,   0f,   1f,   2f,   2f,   0.5f},
+    // /*Poison*/  new float[] {1f,   1f,   1f,   1f,   2f,   1f,   1f,   0.5f, 0.5f, 1f,   1f,   1f,   0.5f, 0.5f, 1f,   1f,   0f,   2f},
+    // /*Ground*/  new float[] {1f,   2f,   1f,   2f,   0.5f, 1f,   1f,   2f,   1f,   0f,   1f,   0.5f, 2f,   1f,   1f,   1f,   2f,   1f},
+    // /*Flying*/  new float[] {1f,   1f,   1f,   0.5f, 2f,   1f,   2f,   1f,   1f,   1f,   1f,   2f,   0.5f, 1f,   1f,   1f,   0.5f, 1f},
+    // /*Psychic*/ new float[] {1f,   1f,   1f,   1f,   1f,   1f,   2f,   2f,   1f,   1f,   0.5f, 1f,   1f,   1f,   1f,   0f,   0.5f, 1f},
+    // /*Bug*/     new float[] {1f,   0.5f, 1f,   1f,   2f,   1f,   0.5f, 0.5f, 1f,   0.5f, 2f,   1f,   1f,   0.5f, 1f,   2f,   0.5f, 0.5f},
+    // /*Rock*/    new float[] {1f,   2f,   1f,   1f,   1f,   2f,   0.5f, 1f,   0.5f, 2f,   1f,   2f,   1f,   1f,   1f,   1f,   0.5f, 1f},
+    // /*Ghost*/   new float[] {0f,   1f,   1f,   1f,   1f,   1f,   1f,   1f,   1f,   1f,   0.5f, 1f,   1f,   2f,   1f,   0.5f, 1f,   1f},
+    // /*Dragon*/  new float[] {1f,   1f,   1f,   1f,   1f,   1f,   1f,   1f,   1f,   1f,   1f,   1f,   1f,   1f,   2f,   1f,   0.5f, 0f},
+    // /*Dark*/    new float[] {1f,   1f,   1f,   1f,   1f,   1f,   0.5f, 1f,   1f,   1f,   2f,   1f,   1f,   2f,   1f,   0.5f, 1f,   0.5f},
+    // /*Steel*/   new float[] {1f,   0.5f, 0.5f, 0.5f, 1f,   2f,   1f,   1f,   1f,   1f,   1f,   2f,   0.5f, 1f,   1f,   1f,   0.5f, 2f},
+    // /*Fairy*/   new float[] {1f,   0.5f, 1f,   1f,   1f,   1f,   2f,   0.5f, 1f,   1f,   1f,   1f,   1f,   1f,   2f,   2f,   0.5f, 1f},
+    
+    // segue o objeto MonsterType
+    // 0.5f atq não efetivo / 1f atq normal / 1.25f atq somente para deuses / 1.5f atq super efetivo
+    //                    cho     deu     flu     fog     ins     lut     luz     met     neg     neu     pla     ter     voa
+    /*cho*/ new float[] { 0.5f,   0.5f,   1.5f,   1f,     1f,     1.5f,   0f,     1.5f,   1f,     1f,     1f,     0f,     1.5f},
+    /*deu*/ new float[] { 1.25f,  1.25f,  1.25f,  1.25f,  1.25f,  1.25f,  1.25f,  1.25f,  1.25f,  1.25f,  1.25f,  1.25f,  1.25f},
+    /*flu*/ new float[] { 0f,     0.5f,   0.5f,   1.5f,   1.5f,   1f,     1f,     1f,     1f,     1f,     0f,     0f,     1.5f},
+    /*fog*/ new float[] { 1f,     0.5f,   0f,     0.5f,   1.5f,   1.5f,   0f,     1.5f,   1f,     1f,     1.5f,   0f,     0.5f},
+    /*ins*/ new float[] { 1f,     0.5f,   0f,     0f,     0.5f,   1.5f,   0f,     0f,     1f,     1f,     1.5f,   1f,     1f},
+    /*lut*/ new float[] { 0f,     0.5f,   1f,     0f,     1.5f,   0.5f,   1f,     1f,     0f,     1f,     1.5f,   1f,     0f},
+    /*luz*/ new float[] { 0f,     0.5f,   1f,     0f,     1f,     1f,     0.5f,   1.5f,   1.5f,   1f,     0.5f,   1f,     1f},
+    /*met*/ new float[] { 0f,     0.5f,   1f,     0f,     1.5f,   1f,     0f,     0.5f,   0f,     1f,     1.5f,   1f,     1.5f},
+    /*neg*/ new float[] { 0.5f,   0.5f,   1f,     0f,     1f,     1.5f,   1.5f,   0f,     0.5f,   1f,     1.5f,   1f,     1.5f},
+    /*neu*/ new float[] { 1f,     0.5f,   1f,     1f,     1f,     1f,     1f,     1f,     1f,     1f,     1f,     1f,     1f},
+    /*pla*/ new float[] { 1f,     0.5f,   1.5f,   0f,     0.5f,   0f,     1.5f,   0f,     0.5f,   1f,     0.5f,   1.5f,   1f},
+    /*ter*/ new float[] { 0f,     0.5f,   1.5f,   1.5f,   1f,     0f,     1f,     1f,     1f,     1f,     1.5f,   0.5f,   1.5f},
+    /*voa*/ new float[] { 0.5f,   0.5f,   0f,     1f,     1.5f,   1.5f,   1f,     0f,     0f,     1f,     1.5f,   1f,     0.5f,}
+  };
+
+  public static float GetEffectiveness(MonsterType attackType, MonsterType defenseType)
+  {
+    if (attackType == MonsterType.None || defenseType == MonsterType.None)
+      return 1;
+
+    int row = (int)attackType - 1;
+    int col = (int)defenseType - 1;
+
+    return chart[row][col];
+  }
 }
