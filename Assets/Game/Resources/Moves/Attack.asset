@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Ataque
   description: Ataque fraco, normalmente aprendido por monstros iniciantes.
-  type: 4
+  type: 10
   power: 40
   accuracy: 100
   sp: 30

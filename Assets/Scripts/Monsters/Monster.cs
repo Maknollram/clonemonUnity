@@ -68,9 +68,14 @@ public class Monster {
       Fainted = false
     };
 
+    float attack = (move.Base.IsSpecial) ? attacker.SpAttack : attacker.Attack;
+    Debug.Log(move.Base.IsSpecial);
+    Debug.Log(attack);
+    float defense = (move.Base.IsSpecial) ? SpDefense : Defense;
+
     float modifiers = Random.Range(0.85f, 1f) * type * critical;
     float a = (2 * attacker.Level + 10) / 250f;
-    float d = a * move.Base.Power * ((float)attacker.Attack / Defense) + 2;
+    float d = a * move.Base.Power * ((float)attack / defense) + 2;
     int damage = Mathf.FloorToInt(d * modifiers);
 
     HP -= damage;

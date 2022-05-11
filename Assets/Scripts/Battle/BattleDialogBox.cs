@@ -73,7 +73,7 @@ public class BattleDialogBox : MonoBehaviour {
         moveTexts[i].color = Color.black;
     }
 
-    spText.text = " SP " + move.SP + "/" + move.Base.SP;
+    spText.text = " Uso " + move.SP + "/" + move.Base.SP;
     typeText.text = "Tipo " + move.Base.Type.ToString();
   }
 

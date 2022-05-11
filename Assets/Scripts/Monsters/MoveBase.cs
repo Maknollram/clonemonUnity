@@ -15,6 +15,8 @@ public class MoveBase : ScriptableObject {
   [SerializeField] int accuracy;
   [SerializeField] int sp;
 
+  [SerializeField] bool isSpecial;
+
   public string Name {
     get { return name; }
   }
@@ -38,4 +40,12 @@ public class MoveBase : ScriptableObject {
   public int SP {
     get { return sp; }
   }
+
+  public bool IsSpecial
+    {
+        get 
+        {
+            return isSpecial;
+        }
+    }
 }

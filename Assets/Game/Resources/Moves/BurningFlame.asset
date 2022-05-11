@@ -17,3 +17,4 @@ MonoBehaviour:
   power: 20
   accuracy: 100
   sp: 20
+  isSpecial: 1

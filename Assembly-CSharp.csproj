@@ -58,6 +58,7 @@
      <Compile Include="Assets\Scripts\Battle\BattleSystem.cs" />
      <Compile Include="Assets\Scripts\Battle\BattleUnit.cs" />
      <Compile Include="Assets\Scripts\Battle\HpBar.cs" />
+     <Compile Include="Assets\Scripts\GameController.cs" />
      <Compile Include="Assets\Scripts\Monsters\Monster.cs" />
      <Compile Include="Assets\Scripts\Monsters\MonsterBase.cs" />
      <Compile Include="Assets\Scripts\Monsters\Move.cs" />
@@ -267,6 +268,9 @@
  <Reference Include="UnityEngine.SpatialTracking">
  <HintPath>C:/Program Files/Unity2018/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
  </Reference>
+ <Reference Include="DOTween">
+ <HintPath>C:/Users/Maknollram/Documents/Clonemon/Assets/Plugins/Demigiant/DOTween/DOTween.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEngine.Analytics">
  <HintPath>C:/Users/Maknollram/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.16/UnityEngine.Analytics.dll</HintPath>
  </Reference>
@@ -300,6 +304,10 @@
  <Reference Include="Boo.Lang">
  <HintPath>C:/Program Files/Unity2018/Editor/Data/MonoBleedingEdge/lib/mono/unity/Boo.Lang.dll</HintPath>
  </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{DC3B96F5-8EE0-6D5E-AB85-75FF5562D844}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

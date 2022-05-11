@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Rosnar
   description: "Reduz a defesa do inimigo ao intimid\xE1-lo."
-  type: 4
-  power: 0
+  type: 10
+  power: 35
   accuracy: 100
   sp: 10
