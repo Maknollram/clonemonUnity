@@ -26,7 +26,7 @@ MonoBehaviour:
   learnableMoves:
   - moveBase: {fileID: 11400000, guid: 9d847865752405f418cfc5ac92a7ea67, type: 2}
     level: 1
-  - moveBase: {fileID: 11400000, guid: 857f1f48aa659cf46865bcc34c776df8, type: 2}
+  - moveBase: {fileID: 11400000, guid: bfa04575144bf084fbfbf43aa813c54d, type: 2}
     level: 4
   - moveBase: {fileID: 11400000, guid: c5d8f919623a26046b80ba63559e9c7b, type: 2}
     level: 7

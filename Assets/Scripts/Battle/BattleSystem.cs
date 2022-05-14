@@ -33,15 +33,20 @@ public class BattleSystem : MonoBehaviour {
   int currentAction;
   int currentMove;
 
-  public void StartBattle()
+  MonsterParty playerParty;
+  Monster wildMonster;
+
+  public void StartBattle(MonsterParty playerParty, Monster wildMonster)
   {
+    this.playerParty = playerParty;
+    this.wildMonster = wildMonster;
     StartCoroutine(SetupBattle());
   }
 
   public IEnumerator SetupBattle()
   {
-    playerUnit.Setup();
-    enemyUnit.Setup();
+    playerUnit.Setup(playerParty.GetHealthyMonster());
+    enemyUnit.Setup(wildMonster);
     playerHud.SetData(playerUnit.Monster);
     enemyHud.SetData(enemyUnit.Monster);
 
@@ -90,6 +95,7 @@ public class BattleSystem : MonoBehaviour {
     {
       yield return dialogBox.TypeDialog(enemyUnit.Monster.Base.Name + " morreu!");
       enemyUnit.PlayFaintAnimation();
+      playerUnit.PlayVictoryAnimation();
 
       yield return new WaitForSeconds(2f);
       OnBattleOver(true);
@@ -123,9 +129,25 @@ public class BattleSystem : MonoBehaviour {
     {
       yield return dialogBox.TypeDialog(playerUnit.Monster.Base.Name + " morreu!");
       playerUnit.PlayFaintAnimation();
+      enemyUnit.PlayVictoryAnimation();
 
       yield return new WaitForSeconds(2f);
-      OnBattleOver(false);
+
+      var nextMonster = playerParty.GetHealthyMonster();
+      if (nextMonster != null)
+      {
+        playerUnit.Setup(nextMonster);
+        playerHud.SetData(nextMonster);
+
+        dialogBox.SetMoveNames(nextMonster.Moves);
+
+        yield return dialogBox.TypeDialog("Pega ele " + nextMonster.Base.Name + ".");
+
+        PlayerAction();
+      }
+      else{
+        OnBattleOver(false);
+      }
     }
     else
     {

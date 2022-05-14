@@ -59,8 +59,10 @@
      <Compile Include="Assets\Scripts\Battle\BattleUnit.cs" />
      <Compile Include="Assets\Scripts\Battle\HpBar.cs" />
      <Compile Include="Assets\Scripts\GameController.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\MapArea.cs" />
      <Compile Include="Assets\Scripts\Monsters\Monster.cs" />
      <Compile Include="Assets\Scripts\Monsters\MonsterBase.cs" />
+     <Compile Include="Assets\Scripts\Monsters\MonsterParty.cs" />
      <Compile Include="Assets\Scripts\Monsters\Move.cs" />
      <Compile Include="Assets\Scripts\Monsters\MoveBase.cs" />
      <Compile Include="Assets\Scripts\Player\PlayerController.cs" />

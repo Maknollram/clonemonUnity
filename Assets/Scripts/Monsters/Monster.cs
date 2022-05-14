@@ -2,22 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class Monster {
 
-	public MonsterBase Base { get; set; }
-  public int Level { get; set; }
+  [SerializeField] MonsterBase _base;
+  [SerializeField] int level;
+
+	public MonsterBase Base { 
+    get {
+      return _base;
+    } 
+  }
+  public int Level { 
+    get{
+      return level;
+    } 
+  }
 
   public int HP { get; set; }
 
   public List<Move> Moves { get; set; }
 
-  public Monster(MonsterBase mBase, int mLevel)
+  public void Init()
   {
-    Base = mBase;
-    Level = mLevel;
     HP = MaxHp;
 
-    //Generate and count moves
+    // Generate and count moves
     Moves = new List<Move>();
     foreach (var move in Base.LearnableMoves)
     {
