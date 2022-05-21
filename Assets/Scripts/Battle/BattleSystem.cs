@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum BattleState { Start, PlayerAction, PlayerMove, EnemyMove, Busy }
+public enum BattleState { Start, ActionSelection, MoveSelection, PerformMove, Busy, PartyScreen, BattleOver}
 
 public class BattleSystem : MonoBehaviour {
 
@@ -23,140 +23,122 @@ public class BattleSystem : MonoBehaviour {
 
 	[SerializeField] BattleUnit playerUnit;
   [SerializeField] BattleUnit enemyUnit;
-  [SerializeField] BattleHud playerHud;
-  [SerializeField] BattleHud enemyHud;
   [SerializeField] BattleDialogBox dialogBox;
+  [SerializeField] PartyScreen partyScreen;
 
   public event Action<bool> OnBattleOver;
 
   BattleState state;
   int currentAction;
   int currentMove;
+  int currentMember;
 
   MonsterParty playerParty;
   Monster wildMonster;
 
-  public void StartBattle(MonsterParty playerParty, Monster wildMonster)
-  {
+  public void StartBattle(MonsterParty playerParty, Monster wildMonster){
     this.playerParty = playerParty;
     this.wildMonster = wildMonster;
     StartCoroutine(SetupBattle());
   }
 
-  public IEnumerator SetupBattle()
-  {
+  public IEnumerator SetupBattle(){
     playerUnit.Setup(playerParty.GetHealthyMonster());
     enemyUnit.Setup(wildMonster);
-    playerHud.SetData(playerUnit.Monster);
-    enemyHud.SetData(enemyUnit.Monster);
+
+    partyScreen.Init();
 
     dialogBox.SetMoveNames(playerUnit.Monster.Moves);
 
-    yield return dialogBox.TypeDialog("Um " + enemyUnit.Monster.Base.Name + " selvagem apareceu.");
+    yield return dialogBox.TypeDialog("Um " + enemyUnit.Monster.Base.Name + " apareceu.");
 
-    PlayerAction();
+    ActionSelection();
   }
 
-  void PlayerAction()
-  {
-    state = BattleState.PlayerAction;
+  void BattleOver(bool finished){
+    state = BattleState.BattleOver;
+    OnBattleOver(finished);
+  }
+
+  void ActionSelection(){
+    state = BattleState.ActionSelection;
     StartCoroutine(dialogBox.TypeDialog("Escolha uma ação"));
     dialogBox.EnableActionSelector(true);
   }
 
-  void PlayerMove()
-  {
-    state = BattleState.PlayerMove;
+  void OpenPartyScreen(){
+    state = BattleState.PartyScreen;
+    partyScreen.SetPartyData(playerParty.Monsters);
+    partyScreen.gameObject.SetActive(true);
+  }
+
+  void MoveSelection(){
+    state = BattleState.MoveSelection;
     dialogBox.EnableActionSelector(false);
     dialogBox.EnableDialogText(false);
     dialogBox.EnableMoveSelector(true);
   }
 
-  IEnumerator PerformPlayerMove()
-  {
-    state = BattleState.Busy;
+  IEnumerator PlayerMove(){
+    state = BattleState.PerformMove;
 
     var move = playerUnit.Monster.Moves[currentMove];
-    move.SP--; // mudar para incrementar no final
-    yield return dialogBox.TypeDialog(playerUnit.Monster.Base.Name + " usou " + move.Base.Name + ".");
+    yield return RunMove(playerUnit, enemyUnit, move);
 
-    playerUnit.PlayAttackAnimation();
-    yield return new WaitForSeconds(1f);
-
-    var damageDetails = enemyUnit.Monster.TakeDamage(move, playerUnit.Monster);
-    
-    if(damageDetails.TypeEffectiveness > 0f)
-      enemyUnit.PlayHitAnimation();
-
-    yield return enemyHud.UpdateHP();
-    yield return ShowDamageDetails(enemyUnit, damageDetails);
-
-    if (damageDetails.Fainted)
-    {
-      yield return dialogBox.TypeDialog(enemyUnit.Monster.Base.Name + " morreu!");
-      enemyUnit.PlayFaintAnimation();
-      playerUnit.PlayVictoryAnimation();
-
-      yield return new WaitForSeconds(2f);
-      OnBattleOver(true);
-    }
-    else
-    {
+    if (state == BattleState.PerformMove)
       StartCoroutine(EnemyMove());
-    }
   }
 
-  IEnumerator EnemyMove()
-  {
-    state = BattleState.EnemyMove;
+  IEnumerator EnemyMove(){
+    state = BattleState.PerformMove;
 
     var move = enemyUnit.Monster.GetRandomMove();
-    move.SP--; // mudar para incrementar no final
-    yield return dialogBox.TypeDialog(enemyUnit.Monster.Base.Name + " usou " + move.Base.Name + ".");
+    yield return RunMove(enemyUnit, playerUnit, move);
 
-    enemyUnit.PlayAttackAnimation();
+    if (state == BattleState.PerformMove)
+      ActionSelection();
+  }
+
+  IEnumerator RunMove(BattleUnit sourceUnit, BattleUnit targetUnit, Move move){
+    move.SP--; // mudar para incrementar no final
+    yield return dialogBox.TypeDialog(sourceUnit.Monster.Base.Name + " usou " + move.Base.Name + ".");
+
+    sourceUnit.PlayAttackAnimation();
     yield return new WaitForSeconds(1f);
 
-    var damageDetails = playerUnit.Monster.TakeDamage(move, playerUnit.Monster);
+    var damageDetails = targetUnit.Monster.TakeDamage(move, sourceUnit.Monster);
     
     if(damageDetails.TypeEffectiveness > 0f)
-      playerUnit.PlayHitAnimation();
+      targetUnit.PlayHitAnimation();
 
-    yield return playerHud.UpdateHP();
-    yield return ShowDamageDetails(playerUnit, damageDetails);
+    yield return targetUnit.Hud.UpdateHP();
+    yield return ShowDamageDetails(targetUnit, damageDetails);
 
     if (damageDetails.Fainted)
     {
-      yield return dialogBox.TypeDialog(playerUnit.Monster.Base.Name + " morreu!");
-      playerUnit.PlayFaintAnimation();
-      enemyUnit.PlayVictoryAnimation();
-
+      yield return dialogBox.TypeDialog(targetUnit.Monster.Base.Name + " morreu!");
+      targetUnit.PlayFaintAnimation();
+      sourceUnit.PlayVictoryAnimation();
       yield return new WaitForSeconds(2f);
-
-      var nextMonster = playerParty.GetHealthyMonster();
-      if (nextMonster != null)
-      {
-        playerUnit.Setup(nextMonster);
-        playerHud.SetData(nextMonster);
-
-        dialogBox.SetMoveNames(nextMonster.Moves);
-
-        yield return dialogBox.TypeDialog("Pega ele " + nextMonster.Base.Name + ".");
-
-        PlayerAction();
-      }
-      else{
-        OnBattleOver(false);
-      }
-    }
-    else
-    {
-      PlayerAction();
+      
+      CheckForBattleOver(targetUnit);
     }
   }
 
-  IEnumerator ShowDamageDetails(BattleUnit battleUnit, DamageDetails damageDetails)
-  {
+  void CheckForBattleOver(BattleUnit faintedUnit){
+    if (faintedUnit.IsPlayerUnit)
+    {
+      var nextMonster = playerParty.GetHealthyMonster();
+      if (nextMonster != null)
+        OpenPartyScreen();
+      else
+        BattleOver(false);
+    }
+    else
+      BattleOver(true);
+  }
+
+  IEnumerator ShowDamageDetails(BattleUnit battleUnit, DamageDetails damageDetails){
     if (damageDetails.Critical > 1f && damageDetails.TypeEffectiveness > 0f)
       yield return dialogBox.TypeDialog(battleUnit.Monster.Base.Name + " recebeu um ataque crítico!");
 
@@ -170,40 +152,64 @@ public class BattleSystem : MonoBehaviour {
       yield return dialogBox.TypeDialog(battleUnit.Monster.Base.Name + " recebeu um ataque muito fraco!");
   }
 
-  public void HandleUpdate()
-  {
-    if (state == BattleState.PlayerAction)
+  public void HandleUpdate(){
+    if (state == BattleState.ActionSelection)
     {
       HandleActionSelection();
     }
-    else if (state == BattleState.PlayerMove)
+    else if (state == BattleState.MoveSelection)
     {
       HandleMoveSelection();
     }
+    else if (state == BattleState.PartyScreen)
+    {
+      HandlePartySelection();
+    }
   }
 
-  void HandleActionSelection()
-  {
-    if (Input.GetKeyDown(joystick1 + DOWN) || Input.GetKeyDown(KeyCode.DownArrow))
-    {
-      if(currentAction < 1)
-        ++currentAction;
-    }else if(Input.GetKeyDown(joystick1 + UP) || Input.GetKeyDown(KeyCode.UpArrow))
-    {
-      if(currentAction > 0)
-        --currentAction;
-    }
+  void HandleActionSelection(){
+    // somente cima/baixo
+    // if (Input.GetKeyDown(joystick1 + DOWN) || Input.GetKeyDown(KeyCode.DownArrow))
+    // {
+    //   if(currentAction < 1)
+    //     ++currentAction;
+    // }else if(Input.GetKeyDown(joystick1 + UP) || Input.GetKeyDown(KeyCode.UpArrow))
+    // {
+    //   if(currentAction > 0)
+    //     --currentAction;
+    // }
+
+    if (Input.GetKeyDown(joystick1 + RIGHT) || Input.GetKeyDown(KeyCode.RightArrow))
+      ++currentAction;
+    else if(Input.GetKeyDown(joystick1 + LEFT) || Input.GetKeyDown(KeyCode.LeftArrow))
+      --currentAction;
+    else if (Input.GetKeyDown(joystick1 + DOWN) || Input.GetKeyDown(KeyCode.DownArrow))
+      currentAction += 2;
+    else if(Input.GetKeyDown(joystick1 + UP) || Input.GetKeyDown(KeyCode.UpArrow))
+      currentAction -= 2;
+
+    currentAction = Mathf.Clamp(currentAction, 0, 3);
 
     dialogBox.UpdateActionSelection(currentAction);
 
-    if (Input.GetKeyDown(joystick1 + CROSS) || Input.GetKeyDown(KeyCode.Keypad0))
+    if (Input.GetKeyDown(joystick1 + CROSS) || Input.GetKeyDown(KeyCode.Keypad2))
     {
         if(currentAction == 0)
         {
           // Let's fight
-          PlayerMove();
+          MoveSelection();
         }
         else if(currentAction == 1)
+        {
+          // Slap an item
+
+        }
+        else if(currentAction == 2)
+        {
+          // Take your monster Comrade
+          OpenPartyScreen();
+        }
+        else if(currentAction == 3)
         {
           // Run like a crazy bitch MAN
 
@@ -211,35 +217,98 @@ public class BattleSystem : MonoBehaviour {
     }
   }
 
-  void HandleMoveSelection()
-  {
+  void HandleMoveSelection(){
     if (Input.GetKeyDown(joystick1 + RIGHT) || Input.GetKeyDown(KeyCode.RightArrow))
-    {
-      if(currentMove < playerUnit.Monster.Moves.Count - 1)
-        ++currentMove;
-    }
+      ++currentMove;
     else if(Input.GetKeyDown(joystick1 + LEFT) || Input.GetKeyDown(KeyCode.LeftArrow))
-    {
-      if(currentMove > 0)
-        --currentMove;
-    }
+      --currentMove;
     else if (Input.GetKeyDown(joystick1 + DOWN) || Input.GetKeyDown(KeyCode.DownArrow))
-    {
-      if(currentMove < playerUnit.Monster.Moves.Count - 2)
-        currentMove += 2;
-    }else if(Input.GetKeyDown(joystick1 + UP) || Input.GetKeyDown(KeyCode.UpArrow))
-    {
-      if(currentMove > 1)
-        currentMove -= 2;
-    }
+      currentMove += 2;
+    else if(Input.GetKeyDown(joystick1 + UP) || Input.GetKeyDown(KeyCode.UpArrow))
+      currentMove -= 2;
+
+    currentMove = Mathf.Clamp(currentMove, 0, playerUnit.Monster.Moves.Count - 1);
 
     dialogBox.UpdateMoveSelection(currentMove, playerUnit.Monster.Moves[currentMove]);
 
-    if (Input.GetKeyDown(joystick1 + CROSS) || Input.GetKeyDown(KeyCode.Keypad0))
+    if (Input.GetKeyDown(joystick1 + CROSS) || Input.GetKeyDown(KeyCode.Keypad2))
     {
       dialogBox.EnableMoveSelector(false);
       dialogBox.EnableDialogText(true);
-      StartCoroutine(PerformPlayerMove());
+      StartCoroutine(PlayerMove());
     }
+    else if(Input.GetKeyDown(joystick1 + CIRCLE) || Input.GetKeyDown(KeyCode.Keypad3))
+    {
+      dialogBox.EnableMoveSelector(false);
+      dialogBox.EnableDialogText(true);
+      ActionSelection();
+    }
+  }
+
+  void HandlePartySelection(){
+    if (Input.GetKeyDown(joystick1 + RIGHT) || Input.GetKeyDown(KeyCode.RightArrow))
+    {
+      ++currentMember;
+      partyScreen.SetMessageText("");
+    }
+    else if (Input.GetKeyDown(joystick1 + LEFT) || Input.GetKeyDown(KeyCode.LeftArrow))
+    {
+      --currentMember;
+      partyScreen.SetMessageText("");
+    }
+    else if (Input.GetKeyDown(joystick1 + DOWN) || Input.GetKeyDown(KeyCode.DownArrow))
+    {
+      currentMember += 2;
+      partyScreen.SetMessageText("");
+    }
+    else if (Input.GetKeyDown(joystick1 + UP) || Input.GetKeyDown(KeyCode.UpArrow))
+    {
+      currentMember -= 2;
+      partyScreen.SetMessageText("");
+    }
+
+    currentMember = Mathf.Clamp(currentMember, 0, playerParty.Monsters.Count - 1);
+
+    partyScreen.UpdateMemberSelection(currentMember);
+
+    if (Input.GetKeyDown(joystick1 + CROSS) || Input.GetKeyDown(KeyCode.Keypad2))
+    {
+      var selectedMember = playerParty.Monsters[currentMember];
+      if (selectedMember.HP <= 0)
+      {
+        partyScreen.SetMessageText("Monstro morto não pode batalhar!");
+        return;
+      }
+      if (selectedMember == playerUnit.Monster)
+      {
+        partyScreen.SetMessageText("Este monstro está em campo!");
+        return;
+      }
+
+      partyScreen.gameObject.SetActive(false);
+      state = BattleState.Busy;
+      StartCoroutine(SwitchMonster(selectedMember));
+    }
+    else if (Input.GetKeyDown(joystick1 + CIRCLE) || Input.GetKeyDown(KeyCode.Keypad3))
+    {
+      partyScreen.gameObject.SetActive(false);
+      ActionSelection();
+    }
+  }
+
+  IEnumerator SwitchMonster(Monster newMonster){
+    if (playerUnit.Monster.HP > 0)
+    {
+      yield return dialogBox.TypeDialog("Retorne " + playerUnit.Monster.Base.Name + ".");
+      playerUnit.PlayFaintAnimation();
+      yield return new WaitForSeconds(1.5f);
+    }
+
+    playerUnit.Setup(newMonster);
+    dialogBox.SetMoveNames(newMonster.Moves);
+
+    yield return dialogBox.TypeDialog("Arrebenta " + newMonster.Base.Name + ".");
+
+    StartCoroutine(EnemyMove());
   }
 }

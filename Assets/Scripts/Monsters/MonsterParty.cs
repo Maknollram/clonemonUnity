@@ -7,16 +7,18 @@ public class MonsterParty : MonoBehaviour {
 
 	[SerializeField] List<Monster> monsters;
 
-  private void Start()
-  {
+  public List<Monster> Monsters{
+    get { return monsters; }
+  }
+
+  private void Start(){
     foreach (var monster in monsters)
     {
         monster.Init();
     }
   }
 
-  public Monster GetHealthyMonster()
-  {
+  public Monster GetHealthyMonster(){
     return monsters.Where(x => x.HP > 0).FirstOrDefault();
   }
 }

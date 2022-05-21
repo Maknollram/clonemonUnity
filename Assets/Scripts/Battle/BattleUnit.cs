@@ -6,6 +6,15 @@ using DG.Tweening;
 
 public class BattleUnit : MonoBehaviour {
   [SerializeField] bool isPlayerUnit;
+  [SerializeField] BattleHud hud;
+
+  public bool IsPlayerUnit{
+    get { return isPlayerUnit; }
+  }
+
+  public BattleHud Hud{
+    get { return hud; }
+  }
 
   public Monster Monster { get; set; }
 
@@ -13,27 +22,26 @@ public class BattleUnit : MonoBehaviour {
   Vector3 originalPos;
   Color originalColor;
 
-  private void Awake()
-  {
+  private void Awake(){
     image = GetComponent<Image>();
     originalPos = image.transform.localPosition;
     originalColor = image.color;
   }
 
-  public void Setup(Monster monster)
-  {
+  public void Setup(Monster monster){
     Monster = monster;
     if (isPlayerUnit)
       image.sprite = Monster.Base.BackSprite;
     else
       image.sprite = Monster.Base.FrontSprite;
 
+    hud.SetData(monster);
+
     image.color = originalColor;
     PlayEnterAnimation();
   }
 
-  public void PlayEnterAnimation()
-  {
+  public void PlayEnterAnimation(){
     if (isPlayerUnit)
     {
       image.transform.localPosition = new Vector3(originalPos.x, -403f);
@@ -46,8 +54,7 @@ public class BattleUnit : MonoBehaviour {
     }
   }
 
-  public void PlayAttackAnimation()
-  {
+  public void PlayAttackAnimation(){
     var sequence = DOTween.Sequence();
     if(isPlayerUnit)
       sequence.Append(image.transform.DOLocalMoveX(originalPos.x + 50f, 0.25f));
@@ -57,8 +64,7 @@ public class BattleUnit : MonoBehaviour {
     sequence.Append(image.transform.DOLocalMoveX(originalPos.x, 0.25f));
   }
 
-  public void PlayHitAnimation()
-  {
+  public void PlayHitAnimation(){
     var sequence = DOTween.Sequence();
     sequence.Append(image.DOColor(Color.red, 0.1f));
     sequence.Append(image.DOColor(originalColor, 0.1f));
@@ -71,16 +77,14 @@ public class BattleUnit : MonoBehaviour {
     sequence.Append(image.transform.DOLocalMoveX(originalPos.x, 0.25f));
   }
 
-  public void PlayFaintAnimation()
-  {
+  public void PlayFaintAnimation(){
     if(isPlayerUnit)
       image.transform.DOLocalMoveY(originalPos.y - 150f, 0.25f);
     else
       image.DOFade(0f, 0.5f);
   }
 
-  public void PlayVictoryAnimation()
-  {
+  public void PlayVictoryAnimation(){
     var sequence = DOTween.Sequence();
     for (int i = 0; i < 2; i++)
     {
