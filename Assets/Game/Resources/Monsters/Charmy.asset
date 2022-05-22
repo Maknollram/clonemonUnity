@@ -13,8 +13,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Fogox
   description: Monstro de fogo.
-  frontSprite: {fileID: 21300000, guid: 6e465f9da1db25f47a5e54493d8e4e66, type: 3}
-  backSprite: {fileID: 21300000, guid: 90a4ba1f82f51e94abbff6116eff4a93, type: 3}
+  frontSprite: {fileID: 21300000, guid: 26e5a972ada94504ca37b0fe7469423e, type: 3}
+  backSprite: {fileID: 21300000, guid: b01a8ba9796436a4cb4f8df3fe56f3e0, type: 3}
   type1: 4
   type2: 0
   maxHP: 39
@@ -30,3 +30,5 @@ MonoBehaviour:
     level: 4
   - moveBase: {fileID: 11400000, guid: c5d8f919623a26046b80ba63559e9c7b, type: 2}
     level: 7
+  - moveBase: {fileID: 11400000, guid: 857f1f48aa659cf46865bcc34c776df8, type: 2}
+    level: 3

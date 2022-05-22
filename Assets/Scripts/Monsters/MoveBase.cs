@@ -15,37 +15,48 @@ public class MoveBase : ScriptableObject {
   [SerializeField] int accuracy;
   [SerializeField] int sp;
 
-  [SerializeField] bool isSpecial;
+  // [SerializeField] bool isSpecial;
 
-  public string Name {
-    get { return name; }
+  [SerializeField] MoveCategory category;
+
+  [SerializeField] MoveEffects effects;
+
+  [SerializeField] MoveTarget target;
+
+  public string Name { get { return name; } }
+
+  public string Description { get { return description; } }
+
+  public MonsterType Type { get { return type; } }
+
+  public int Power { get { return power; } }
+
+  public int Accuracy { get { return accuracy; } }
+
+  public int SP { get { return sp; } }
+
+  public MoveCategory Category { get { return category; } }
+
+  public MoveEffects Effects { get { return effects; } }
+
+  public MoveTarget Target { get { return target; } }
+
+  // public bool IsSpecial { get { return isSpecial; } } 
   }
 
-  public string Description {
-    get { return description; }
+  [System.Serializable]
+  public class MoveEffects {
+    [SerializeField] List<StatBoost> boosts;
+
+    public List<StatBoost> Boosts{ get { return boosts; } }
   }
 
-  public MonsterType Type {
-    get { return type; }
+  [System.Serializable]
+  public class StatBoost{
+    public Stat stat;
+    public int boost;
   }
 
-  public int Power {
-    get { return power; }
-  }
+  public enum MoveCategory { Physical, Special, Status }
 
-  public int Accuracy {
-    get { return accuracy; }
-  }
-
-  public int SP {
-    get { return sp; }
-  }
-
-  public bool IsSpecial
-    {
-        get 
-        {
-            return isSpecial;
-        }
-    }
-}
+  public enum MoveTarget { Foe, Self }

@@ -96,4 +96,14 @@ public class BattleUnit : MonoBehaviour {
       sequence.Append(image.transform.DOLocalMoveY(originalPos.y, 0.15f));
     }
   }
+
+  public void PlayStatusAnimation(){
+    var sequence = DOTween.Sequence();
+
+    if (isPlayerUnit)
+      sequence.Append(image.DOColor(Color.blue, 0.1f));
+    else
+      sequence.Append(image.DOColor(Color.yellow, 0.1f));
+    sequence.Append(image.DOColor(originalColor, 0.1f));
+  }
 }

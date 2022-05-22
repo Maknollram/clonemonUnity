@@ -14,6 +14,12 @@ MonoBehaviour:
   name: Rosnar
   description: "Reduz a defesa do inimigo ao intimid\xE1-lo."
   type: 10
-  power: 35
+  power: 0
   accuracy: 100
   sp: 10
+  category: 2
+  effects:
+    boosts:
+    - stat: 0
+      boost: 1
+  target: 1

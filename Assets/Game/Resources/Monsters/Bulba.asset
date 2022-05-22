@@ -13,8 +13,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Aguolvo
   description: Monstro planta.
-  frontSprite: {fileID: 21300000, guid: 6a49052521bca824f9b1510d8f2b77ac, type: 3}
-  backSprite: {fileID: 21300000, guid: 8e496191b748e8a47bea7110f0b6790e, type: 3}
+  frontSprite: {fileID: 21300000, guid: be932816ea842144a8f94767db1456f8, type: 3}
+  backSprite: {fileID: 21300000, guid: eff7b0344509f7446838a7e30d5bb366, type: 3}
   type1: 3
   type2: 0
   maxHP: 45

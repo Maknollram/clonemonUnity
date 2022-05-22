@@ -80,8 +80,7 @@ public class MonsterBase : ScriptableObject {
 }
 
 [System.Serializable]
-public class LearnableMove
-{
+public class LearnableMove{
   [SerializeField] MoveBase moveBase;
   [SerializeField] int level;
 
@@ -94,8 +93,7 @@ public class LearnableMove
   }
 }
 
-public enum MonsterType
-{
+public enum MonsterType{
   // None,
   // Normal,
   // Fire,
@@ -132,8 +130,15 @@ public enum MonsterType
   Voador
 }
 
-public class TypeChart
-{
+public enum Stat{
+  Attack,
+  Defense,
+  SpAttack,
+  SpDefense,
+  Speed
+}
+
+public class TypeChart{
   static float [][] chart =
   {
     //Has to be same order as PokemonType class
@@ -175,8 +180,7 @@ public class TypeChart
     /*voa*/ new float[] { 0.5f,   0.5f,   0f,     1f,     1.5f,   1.5f,   1f,     0f,     0f,     1f,     1.5f,   1f,     0.5f,}
   };
 
-  public static float GetEffectiveness(MonsterType attackType, MonsterType defenseType)
-  {
+  public static float GetEffectiveness(MonsterType attackType, MonsterType defenseType){
     if (attackType == MonsterType.None || defenseType == MonsterType.None)
       return 1;
 

@@ -106,16 +106,29 @@ public class BattleSystem : MonoBehaviour {
     sourceUnit.PlayAttackAnimation();
     yield return new WaitForSeconds(1f);
 
-    var damageDetails = targetUnit.Monster.TakeDamage(move, sourceUnit.Monster);
-    
-    if(damageDetails.TypeEffectiveness > 0f)
-      targetUnit.PlayHitAnimation();
+    if (move.Base.Category == MoveCategory.Status){
+      var effects = move.Base.Effects;
+      if (effects.Boosts != null){
+        if (move.Base.Target == MoveTarget.Self){
+          sourceUnit.Monster.ApplyBoosts(effects.Boosts);
+          sourceUnit.PlayStatusAnimation();
+        }
+        else{
+          targetUnit.Monster.ApplyBoosts(effects.Boosts);
+          targetUnit.PlayStatusAnimation();
+        }
+      }
+    }else{
+      var damageDetails = targetUnit.Monster.TakeDamage(move, sourceUnit.Monster);
+  
+      if(damageDetails.TypeEffectiveness > 0f && move.Base.Category != MoveCategory.Status)
+        targetUnit.PlayHitAnimation();
 
-    yield return targetUnit.Hud.UpdateHP();
-    yield return ShowDamageDetails(targetUnit, damageDetails);
+      yield return targetUnit.Hud.UpdateHP();
+      yield return ShowDamageDetails(targetUnit, damageDetails);
+    }
 
-    if (damageDetails.Fainted)
-    {
+    if (targetUnit.Monster.HP <= 0){
       yield return dialogBox.TypeDialog(targetUnit.Monster.Base.Name + " morreu!");
       targetUnit.PlayFaintAnimation();
       sourceUnit.PlayVictoryAnimation();
@@ -126,15 +139,14 @@ public class BattleSystem : MonoBehaviour {
   }
 
   void CheckForBattleOver(BattleUnit faintedUnit){
-    if (faintedUnit.IsPlayerUnit)
-    {
+    if (faintedUnit.IsPlayerUnit){
       var nextMonster = playerParty.GetHealthyMonster();
+      
       if (nextMonster != null)
         OpenPartyScreen();
       else
         BattleOver(false);
-    }
-    else
+    }else
       BattleOver(true);
   }
 
@@ -153,16 +165,11 @@ public class BattleSystem : MonoBehaviour {
   }
 
   public void HandleUpdate(){
-    if (state == BattleState.ActionSelection)
-    {
+    if (state == BattleState.ActionSelection){
       HandleActionSelection();
-    }
-    else if (state == BattleState.MoveSelection)
-    {
+    }else if (state == BattleState.MoveSelection){
       HandleMoveSelection();
-    }
-    else if (state == BattleState.PartyScreen)
-    {
+    }else if (state == BattleState.PartyScreen){
       HandlePartySelection();
     }
   }
@@ -192,25 +199,17 @@ public class BattleSystem : MonoBehaviour {
 
     dialogBox.UpdateActionSelection(currentAction);
 
-    if (Input.GetKeyDown(joystick1 + CROSS) || Input.GetKeyDown(KeyCode.Keypad2))
-    {
-        if(currentAction == 0)
-        {
+    if (Input.GetKeyDown(joystick1 + CROSS) || Input.GetKeyDown(KeyCode.Keypad2)){
+        if(currentAction == 0){
           // Let's fight
           MoveSelection();
-        }
-        else if(currentAction == 1)
-        {
+        }else if(currentAction == 1){
           // Slap an item
 
-        }
-        else if(currentAction == 2)
-        {
+        }else if(currentAction == 2){
           // Take your monster Comrade
           OpenPartyScreen();
-        }
-        else if(currentAction == 3)
-        {
+        }else if(currentAction == 3){
           // Run like a crazy bitch MAN
 
         }
@@ -231,14 +230,11 @@ public class BattleSystem : MonoBehaviour {
 
     dialogBox.UpdateMoveSelection(currentMove, playerUnit.Monster.Moves[currentMove]);
 
-    if (Input.GetKeyDown(joystick1 + CROSS) || Input.GetKeyDown(KeyCode.Keypad2))
-    {
+    if (Input.GetKeyDown(joystick1 + CROSS) || Input.GetKeyDown(KeyCode.Keypad2)){
       dialogBox.EnableMoveSelector(false);
       dialogBox.EnableDialogText(true);
       StartCoroutine(PlayerMove());
-    }
-    else if(Input.GetKeyDown(joystick1 + CIRCLE) || Input.GetKeyDown(KeyCode.Keypad3))
-    {
+    }else if(Input.GetKeyDown(joystick1 + CIRCLE) || Input.GetKeyDown(KeyCode.Keypad3)){
       dialogBox.EnableMoveSelector(false);
       dialogBox.EnableDialogText(true);
       ActionSelection();
@@ -246,23 +242,16 @@ public class BattleSystem : MonoBehaviour {
   }
 
   void HandlePartySelection(){
-    if (Input.GetKeyDown(joystick1 + RIGHT) || Input.GetKeyDown(KeyCode.RightArrow))
-    {
+    if (Input.GetKeyDown(joystick1 + RIGHT) || Input.GetKeyDown(KeyCode.RightArrow)){
       ++currentMember;
       partyScreen.SetMessageText("");
-    }
-    else if (Input.GetKeyDown(joystick1 + LEFT) || Input.GetKeyDown(KeyCode.LeftArrow))
-    {
+    }else if (Input.GetKeyDown(joystick1 + LEFT) || Input.GetKeyDown(KeyCode.LeftArrow)){
       --currentMember;
       partyScreen.SetMessageText("");
-    }
-    else if (Input.GetKeyDown(joystick1 + DOWN) || Input.GetKeyDown(KeyCode.DownArrow))
-    {
+    }else if (Input.GetKeyDown(joystick1 + DOWN) || Input.GetKeyDown(KeyCode.DownArrow)){
       currentMember += 2;
       partyScreen.SetMessageText("");
-    }
-    else if (Input.GetKeyDown(joystick1 + UP) || Input.GetKeyDown(KeyCode.UpArrow))
-    {
+    }else if (Input.GetKeyDown(joystick1 + UP) || Input.GetKeyDown(KeyCode.UpArrow)){
       currentMember -= 2;
       partyScreen.SetMessageText("");
     }
@@ -271,16 +260,15 @@ public class BattleSystem : MonoBehaviour {
 
     partyScreen.UpdateMemberSelection(currentMember);
 
-    if (Input.GetKeyDown(joystick1 + CROSS) || Input.GetKeyDown(KeyCode.Keypad2))
-    {
+    if (Input.GetKeyDown(joystick1 + CROSS) || Input.GetKeyDown(KeyCode.Keypad2)){
       var selectedMember = playerParty.Monsters[currentMember];
-      if (selectedMember.HP <= 0)
-      {
+
+      if (selectedMember.HP <= 0){
         partyScreen.SetMessageText("Monstro morto não pode batalhar!");
         return;
       }
-      if (selectedMember == playerUnit.Monster)
-      {
+
+      if (selectedMember == playerUnit.Monster){
         partyScreen.SetMessageText("Este monstro está em campo!");
         return;
       }
@@ -288,17 +276,14 @@ public class BattleSystem : MonoBehaviour {
       partyScreen.gameObject.SetActive(false);
       state = BattleState.Busy;
       StartCoroutine(SwitchMonster(selectedMember));
-    }
-    else if (Input.GetKeyDown(joystick1 + CIRCLE) || Input.GetKeyDown(KeyCode.Keypad3))
-    {
+    }else if (Input.GetKeyDown(joystick1 + CIRCLE) || Input.GetKeyDown(KeyCode.Keypad3)){
       partyScreen.gameObject.SetActive(false);
       ActionSelection();
     }
   }
 
   IEnumerator SwitchMonster(Monster newMonster){
-    if (playerUnit.Monster.HP > 0)
-    {
+    if (playerUnit.Monster.HP > 0){
       yield return dialogBox.TypeDialog("Retorne " + playerUnit.Monster.Base.Name + ".");
       playerUnit.PlayFaintAnimation();
       yield return new WaitForSeconds(1.5f);
