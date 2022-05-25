@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.ComponentModel;
 
 [CreateAssetMenu(fileName = "Monster", menuName ="Monster/Create new monster")]
 public class MonsterBase : ScriptableObject {
@@ -115,14 +116,14 @@ public enum MonsterType{
   // Fairy
 
   None,
-  Choque,/*elétrico*//*virtual*/
+  Choque,/*elehtrico*//*virtual*/
   Deus,
-  Fluido,/*água*//*gelo*/
+  Fluido,/*ahgua*//*gelo*/
   Fogo,
   Inseto,
   Lutador,
   Luz,/*fada*/
-  Metal,/*máquina*//*mecânico*/
+  Metal,/*mahquina*//*mecahnico*/
   Negro,/*fantasma*/
   Neutro,
   Planta,
@@ -130,11 +131,17 @@ public enum MonsterType{
   Voador
 }
 
+// Description precisa usar System.ComponentModel e eh usado no .DisplayName(), exemplo na class Monster
 public enum Stat{
+  [Description("Ataque")]
   Attack,
+  [Description("Defesa")]
   Defense,
+  [Description("Ataque Mágico")]
   SpAttack,
+  [Description("Defesa Mágica")]
   SpDefense,
+  [Description("Agilidade")]
   Speed
 }
 

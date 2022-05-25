@@ -50,13 +50,21 @@ public class BattleSystem : MonoBehaviour {
 
     dialogBox.SetMoveNames(playerUnit.Monster.Moves);
 
-    yield return dialogBox.TypeDialog("Um " + enemyUnit.Monster.Base.Name + " apareceu.");
+    yield return dialogBox.TypeDialog($"Um {enemyUnit.Monster.Base.Name} apareceu.");
 
-    ActionSelection();
+    ChooseFirstTurn();
+  }
+
+  void ChooseFirstTurn(){
+    if (playerUnit.Monster.Speed >= enemyUnit.Monster.Speed)
+      ActionSelection();
+    else
+      StartCoroutine(EnemyMove());
   }
 
   void BattleOver(bool finished){
     state = BattleState.BattleOver;
+    playerParty.Monsters.ForEach(m => m.OnBattleOver()); // reset monsters stats and status
     OnBattleOver(finished);
   }
 
@@ -101,23 +109,13 @@ public class BattleSystem : MonoBehaviour {
 
   IEnumerator RunMove(BattleUnit sourceUnit, BattleUnit targetUnit, Move move){
     move.SP--; // mudar para incrementar no final
-    yield return dialogBox.TypeDialog(sourceUnit.Monster.Base.Name + " usou " + move.Base.Name + ".");
+    yield return dialogBox.TypeDialog($"{sourceUnit.Monster.Base.Name} usou {move.Base.Name}.");
 
     sourceUnit.PlayAttackAnimation();
     yield return new WaitForSeconds(1f);
 
     if (move.Base.Category == MoveCategory.Status){
-      var effects = move.Base.Effects;
-      if (effects.Boosts != null){
-        if (move.Base.Target == MoveTarget.Self){
-          sourceUnit.Monster.ApplyBoosts(effects.Boosts);
-          sourceUnit.PlayStatusAnimation();
-        }
-        else{
-          targetUnit.Monster.ApplyBoosts(effects.Boosts);
-          targetUnit.PlayStatusAnimation();
-        }
-      }
+      yield return RunMoveEffects(sourceUnit, targetUnit, move, sourceUnit.Monster, targetUnit.Monster);
     }else{
       var damageDetails = targetUnit.Monster.TakeDamage(move, sourceUnit.Monster);
   
@@ -129,12 +127,39 @@ public class BattleSystem : MonoBehaviour {
     }
 
     if (targetUnit.Monster.HP <= 0){
-      yield return dialogBox.TypeDialog(targetUnit.Monster.Base.Name + " morreu!");
+      yield return dialogBox.TypeDialog($"{ targetUnit.Monster.Base.Name} morreu!");
       targetUnit.PlayFaintAnimation();
       sourceUnit.PlayVictoryAnimation();
       yield return new WaitForSeconds(2f);
       
       CheckForBattleOver(targetUnit);
+    }
+  }
+
+  // alterar para ficar com somente souceUnit e targetUnit
+  IEnumerator RunMoveEffects(BattleUnit sourceUnit, BattleUnit targetUnit, Move move, Monster source, Monster target){
+    //stats boosts
+    var effects = move.Base.Effects;
+
+    if (effects.Boosts != null){
+      if (move.Base.Target == MoveTarget.Self){
+        source.ApplyBoosts(effects.Boosts);
+        sourceUnit.PlayStatusAnimation();
+      }
+      else{
+        target.ApplyBoosts(effects.Boosts);
+        targetUnit.PlayStatusAnimation();
+      }
+    }
+
+    yield return ShowStatusChanges(source);
+    yield return ShowStatusChanges(target);
+  }
+
+  IEnumerator ShowStatusChanges(Monster monster){
+    while (monster.StatusChanges.Count > 0){
+      var message = monster.StatusChanges.Dequeue();
+      yield return dialogBox.TypeDialog(message);
     }
   }
 
@@ -152,16 +177,16 @@ public class BattleSystem : MonoBehaviour {
 
   IEnumerator ShowDamageDetails(BattleUnit battleUnit, DamageDetails damageDetails){
     if (damageDetails.Critical > 1f && damageDetails.TypeEffectiveness > 0f)
-      yield return dialogBox.TypeDialog(battleUnit.Monster.Base.Name + " recebeu um ataque crítico!");
+      yield return dialogBox.TypeDialog($"{battleUnit.Monster.Base.Name} recebeu um ataque crítico!");
 
     if (damageDetails.TypeEffectiveness <= 0f)
-      yield return dialogBox.TypeDialog("Este ataque não afetou " + battleUnit.Monster.Base.Name + "!");
+      yield return dialogBox.TypeDialog($"Este ataque não afetou {battleUnit.Monster.Base.Name}!");
     else if (damageDetails.TypeEffectiveness > 1f && damageDetails.TypeEffectiveness <= 1.25f)
-      yield return dialogBox.TypeDialog(battleUnit.Monster.Base.Name + " recebeu o ataque de um Deus!");
+      yield return dialogBox.TypeDialog($"{battleUnit.Monster.Base.Name} recebeu o ataque de um Deus!");
     else if (damageDetails.TypeEffectiveness > 1.25f)
-      yield return dialogBox.TypeDialog(battleUnit.Monster.Base.Name + " recebeu um ataque muito forte!");
+      yield return dialogBox.TypeDialog($"{battleUnit.Monster.Base.Name} recebeu um ataque muito forte!");
     else if (damageDetails.TypeEffectiveness < 1f)
-      yield return dialogBox.TypeDialog(battleUnit.Monster.Base.Name + " recebeu um ataque muito fraco!");
+      yield return dialogBox.TypeDialog($"{battleUnit.Monster.Base.Name} recebeu um ataque muito fraco!");
   }
 
   public void HandleUpdate(){
@@ -283,8 +308,11 @@ public class BattleSystem : MonoBehaviour {
   }
 
   IEnumerator SwitchMonster(Monster newMonster){
+    bool currentMonsterFainted = true;
+
     if (playerUnit.Monster.HP > 0){
-      yield return dialogBox.TypeDialog("Retorne " + playerUnit.Monster.Base.Name + ".");
+      currentMonsterFainted = false;
+      yield return dialogBox.TypeDialog($"Retorne {playerUnit.Monster.Base.Name}.");
       playerUnit.PlayFaintAnimation();
       yield return new WaitForSeconds(1.5f);
     }
@@ -292,8 +320,11 @@ public class BattleSystem : MonoBehaviour {
     playerUnit.Setup(newMonster);
     dialogBox.SetMoveNames(newMonster.Moves);
 
-    yield return dialogBox.TypeDialog("Arrebenta " + newMonster.Base.Name + ".");
+    yield return dialogBox.TypeDialog($"Arrebenta {newMonster.Base.Name}.");
 
-    StartCoroutine(EnemyMove());
+    if (currentMonsterFainted)
+      ChooseFirstTurn();
+    else
+      StartCoroutine(EnemyMove());
   }
 }
