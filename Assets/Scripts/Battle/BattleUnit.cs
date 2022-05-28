@@ -97,13 +97,15 @@ public class BattleUnit : MonoBehaviour {
     }
   }
 
-  public void PlayStatusAnimation(){
+  public void PlayStatBoostAnimation(){
     var sequence = DOTween.Sequence();
+    sequence.Append(image.DOColor(Color.grey, 0.1f));
+    sequence.Append(image.DOColor(originalColor, 0.1f));
+  }
 
-    if (isPlayerUnit)
-      sequence.Append(image.DOColor(Color.blue, 0.1f));
-    else
-      sequence.Append(image.DOColor(Color.yellow, 0.1f));
+  public void PlayStatusAilmentsAnimation(){
+    var sequence = DOTween.Sequence();
+    sequence.Append(image.DOColor(Color.yellow, 0.1f));
     sequence.Append(image.DOColor(originalColor, 0.1f));
   }
 }

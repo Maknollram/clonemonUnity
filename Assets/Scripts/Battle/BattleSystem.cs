@@ -134,6 +134,19 @@ public class BattleSystem : MonoBehaviour {
       
       CheckForBattleOver(targetUnit);
     }
+
+    sourceUnit.Monster.OnAfterTurn();
+    yield return ShowStatusChanges(sourceUnit.Monster);
+    yield return sourceUnit.Hud.UpdateHP();
+
+    if (sourceUnit.Monster.HP <= 0){
+      yield return dialogBox.TypeDialog($"{ sourceUnit.Monster.Base.Name} morreu!");
+      sourceUnit.PlayFaintAnimation();
+      targetUnit.PlayVictoryAnimation();
+      yield return new WaitForSeconds(2f);
+      
+      CheckForBattleOver(sourceUnit);
+    }
   }
 
   // alterar para ficar com somente souceUnit e targetUnit
@@ -144,11 +157,22 @@ public class BattleSystem : MonoBehaviour {
     if (effects.Boosts != null){
       if (move.Base.Target == MoveTarget.Self){
         source.ApplyBoosts(effects.Boosts);
-        sourceUnit.PlayStatusAnimation();
+        sourceUnit.PlayStatBoostAnimation();
       }
       else{
         target.ApplyBoosts(effects.Boosts);
-        targetUnit.PlayStatusAnimation();
+        targetUnit.PlayStatBoostAnimation();
+      }
+    }
+
+    // status condition (ailments, weather, etc)
+    if (effects.Status != ConditionID.none){
+      target.SetStatus(effects.Status);
+      if (move.Base.Target == MoveTarget.Self){
+        sourceUnit.PlayStatusAilmentsAnimation();
+      }
+      else{
+        targetUnit.PlayStatusAilmentsAnimation();
       }
     }
 
