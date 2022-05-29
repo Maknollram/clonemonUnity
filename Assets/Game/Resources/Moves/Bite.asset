@@ -16,9 +16,9 @@ MonoBehaviour:
   type: 0
   power: 10
   accuracy: 100
-  sp: 10
+  sp: 5
   category: 2
   effects:
     boosts: []
-    status: 2
+    status: 1
   target: 0

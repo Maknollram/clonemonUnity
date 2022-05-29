@@ -108,6 +108,17 @@ public class BattleSystem : MonoBehaviour {
   }
 
   IEnumerator RunMove(BattleUnit sourceUnit, BattleUnit targetUnit, Move move){
+
+    // to verify status ailments like paralize, sleep and freeze for example
+    bool canRunMove = sourceUnit.Monster.OnBeforeMove();
+    if(!canRunMove){
+      yield return ShowStatusChanges(sourceUnit.Monster);
+      yield return sourceUnit.Hud.UpdateHP(); // if the status do damage, like freeze
+      yield break;
+    }
+    yield return ShowStatusChanges(sourceUnit.Monster);
+    // ========================================================================
+
     move.SP--; // mudar para incrementar no final
     yield return dialogBox.TypeDialog($"{sourceUnit.Monster.Base.Name} usou {move.Base.Name}.");
 
@@ -149,7 +160,7 @@ public class BattleSystem : MonoBehaviour {
     }
   }
 
-  // alterar para ficar com somente souceUnit e targetUnit
+  // correcao, alterar para ficar com somente souceUnit e targetUnit
   IEnumerator RunMoveEffects(BattleUnit sourceUnit, BattleUnit targetUnit, Move move, Monster source, Monster target){
     //stats boosts
     var effects = move.Base.Effects;

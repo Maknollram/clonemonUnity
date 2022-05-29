@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 638aee131e4643a4dba91cfeee8a11ce, type: 3}
+  m_Name: Sing
+  m_EditorClassIdentifier: 
+  name: Cantarolar
+  description: "Qualquer monstro que ouvir esta voz, dormir\xE1."
+  type: 0
+  power: 10
+  accuracy: 100
+  sp: 5
+  category: 2
+  effects:
+    boosts: []
+    status: 9
+  target: 0

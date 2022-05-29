@@ -19,6 +19,8 @@ public class Monster {
   public Dictionary<Stat, int> StatBoosts { get; private set; }
 
   public Condition Status { get; private set; }
+  public int StatusTime { get; set; }
+  public int BleedTime { get; set; }
 
   public Queue<string> StatusChanges { get; private set; } = new Queue<string>();
 
@@ -157,12 +159,24 @@ public class Monster {
 
   public void SetStatus(ConditionID conditionID){
     Status = ConditionsDB.Conditions[conditionID];
+    Status?.OnStart?.Invoke(this);
     StatusChanges.Enqueue($"{Base.Name} {Status.StartMessage}");
+  }
+
+  public void CureStatus(){
+    Status = null;
   }
 
   public Move GetRandomMove(){
     int r = Random.Range(0, Moves.Count);
     return Moves[r];
+  }
+
+  public bool OnBeforeMove(){
+    if(Status?.OnBeforeMove != null)
+      return Status.OnBeforeMove(this);
+
+    return true;
   }
 
   public void OnAfterTurn(){
