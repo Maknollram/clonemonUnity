@@ -20,11 +20,15 @@ public class Monster {
 
   public Condition Status { get; private set; }
   public int StatusTime { get; set; }
+  public Condition VolatileStatus { get; private set; }
+  public int VolatileStatusTime { get; set; }
   public int BleedTime { get; set; }
 
   public Queue<string> StatusChanges { get; private set; } = new Queue<string>();
 
   public bool HpChanged { get; set; }
+
+  public event System.Action OnStatusChanged;
 
   public void Init(){
     // Generate and count moves
@@ -42,11 +46,13 @@ public class Monster {
     HP = MaxHp;
 
     ResetStatBoost();
+
+    // if want status ailments to reset
+    Status = null; 
+    VolatileStatus = null;
   }
 
   void CalculateStats(){
-    MaxHp = Mathf.FloorToInt((Base.MaxHp * Level) / 100f) + 10;
-
     // add stat formula
     Stats = new Dictionary<Stat, int>();
     Stats.Add(Stat.Attack, Mathf.FloorToInt((Base.Attack * Level) / 100f) + 5);
@@ -54,6 +60,8 @@ public class Monster {
     Stats.Add(Stat.SpAttack, Mathf.FloorToInt((Base.SpAttack * Level) / 100f) + 5);
     Stats.Add(Stat.SpDefense, Mathf.FloorToInt((Base.SpDefense * Level) / 100f) + 5);
     Stats.Add(Stat.Speed, Mathf.FloorToInt((Base.Speed * Level) / 100f) + 5);
+
+    MaxHp = Mathf.FloorToInt((Base.MaxHp * Level) / 100f) + 10 + Level;
   }
 
   void ResetStatBoost(){
@@ -157,14 +165,31 @@ public class Monster {
     HpChanged = true;
   }
 
-  public void SetStatus(ConditionID conditionID){
-    Status = ConditionsDB.Conditions[conditionID];
+  public void SetStatus(ConditionID conditionId){
+    if (Status != null) return;
+
+    Status = ConditionsDB.Conditions[conditionId];
     Status?.OnStart?.Invoke(this);
     StatusChanges.Enqueue($"{Base.Name} {Status.StartMessage}");
+
+    OnStatusChanged?.Invoke();
   }
 
   public void CureStatus(){
     Status = null;
+    OnStatusChanged?.Invoke();
+  }
+
+  public void SetVolatileStatus(ConditionID conditionId){
+    if (VolatileStatus != null) return;
+
+    VolatileStatus = ConditionsDB.Conditions[conditionId];
+    VolatileStatus?.OnStart?.Invoke(this);
+    StatusChanges.Enqueue($"{Base.Name} {VolatileStatus.StartMessage}");
+  }
+
+  public void CureVolatileStatus(){
+    VolatileStatus = null;
   }
 
   public Move GetRandomMove(){
@@ -173,17 +198,28 @@ public class Monster {
   }
 
   public bool OnBeforeMove(){
-    if(Status?.OnBeforeMove != null)
-      return Status.OnBeforeMove(this);
+    bool canPerformMove = true;
 
-    return true;
+    if(Status?.OnBeforeMove != null){
+      if (!Status.OnBeforeMove(this))
+        canPerformMove = false;
+    }
+
+    if(VolatileStatus?.OnBeforeMove != null){
+      if (!VolatileStatus.OnBeforeMove(this))
+        canPerformMove = false;
+    }
+
+    return canPerformMove;
   }
 
   public void OnAfterTurn(){
     Status?.OnAfterTurn?.Invoke(this);
+    VolatileStatus?.OnAfterTurn?.Invoke(this);
   }
 
   public void OnBattleOver(){
+    VolatileStatus = null;
     ResetStatBoost();
   }
 }

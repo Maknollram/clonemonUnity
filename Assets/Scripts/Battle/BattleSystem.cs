@@ -113,7 +113,7 @@ public class BattleSystem : MonoBehaviour {
     bool canRunMove = sourceUnit.Monster.OnBeforeMove();
     if(!canRunMove){
       yield return ShowStatusChanges(sourceUnit.Monster);
-      yield return sourceUnit.Hud.UpdateHP(); // if the status do damage, like freeze
+      yield return sourceUnit.Hud.UpdateHP(); // if the status do damage, like freeze, confusion, etc
       yield break;
     }
     yield return ShowStatusChanges(sourceUnit.Monster);
@@ -176,9 +176,20 @@ public class BattleSystem : MonoBehaviour {
       }
     }
 
-    // status condition (ailments, weather, etc)
+    // status ailments (ailments, weather, etc)
     if (effects.Status != ConditionID.none){
       target.SetStatus(effects.Status);
+      if (move.Base.Target == MoveTarget.Self){
+        sourceUnit.PlayStatusAilmentsAnimation();
+      }
+      else{
+        targetUnit.PlayStatusAilmentsAnimation();
+      }
+    }
+
+    // volatile status conditions (confusion, etc)
+    if (effects.VolatileStatus != ConditionID.none){
+      target.SetVolatileStatus(effects.VolatileStatus);
       if (move.Base.Target == MoveTarget.Self){
         sourceUnit.PlayStatusAilmentsAnimation();
       }

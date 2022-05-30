@@ -4,7 +4,17 @@ using UnityEngine;
 using System.ComponentModel;
 
 public class ConditionsDB {
+  public static void Init(){
+    foreach (var cond in Conditions){
+      var conditionId = cond.Key;
+      var condition = cond.Value;
+
+      condition.Id = conditionId;
+    }
+  }
+
   public static Dictionary<ConditionID, Condition> Conditions { get; set; } = new Dictionary<ConditionID, Condition> () {
+    // status ailments
     {
       ConditionID.psn,
       new Condition() {
@@ -99,6 +109,59 @@ public class ConditionsDB {
           return false;
         }
       }
+    },
+    // volatile status conditions
+    {
+      ConditionID.confusion,
+      new Condition() {
+        Name = "Desorientado",
+        StartMessage = "está vendo estrelas!",
+        OnStart = (Monster monster) => {
+          monster.VolatileStatusTime = Random.Range(1, 4);
+        },
+        OnBeforeMove = (Monster monster) => {
+          if (monster.VolatileStatusTime <= 0){ // three turns
+            monster.CureVolatileStatus();
+            monster.StatusChanges.Enqueue($"{monster.Base.Name} voltou ao normal.");
+            return true;
+          }
+
+          monster.VolatileStatusTime--;
+
+          // chance to use move (50%)
+          if(Random.Range(1, 3) == 1)
+            return true;
+
+          // if don't pass in the above verification hurt himself
+          monster.StatusChanges.Enqueue($"{monster.Base.Name} está desorientado.");
+          monster.UpdateHP(monster.MaxHp / 12);
+          monster.StatusChanges.Enqueue($"{monster.Base.Name} está tão desorientado que atacou a si mesmo.");
+          return false;
+        }
+      }
+    },
+    {
+      ConditionID.spikes,
+      new Condition() {
+        Name = "Espinhos",
+        StartMessage = "está rodeado por espinhos!",
+        OnStart = (Monster monster) => {
+          monster.VolatileStatusTime = Random.Range(1, 4);
+        },
+        OnAfterTurn = (Monster monster) => {
+          if (monster.VolatileStatusTime <= 0){ // three turns
+            monster.CureVolatileStatus();
+            monster.StatusChanges.Enqueue($"Os espinhos se quebraram.");
+          }
+
+          monster.VolatileStatusTime--;
+
+          // hurt the enemy
+          monster.StatusChanges.Enqueue($"Os espinhos estão furando {monster.Base.Name}.");
+          monster.UpdateHP(monster.MaxHp / 10);
+          monster.StatusChanges.Enqueue($"Remova os espinhos de {monster.Base.Name} ou espere que eles se quebrem.");
+        }
+      }
     }
   };
 }
@@ -124,5 +187,9 @@ public enum ConditionID {
   [Description("Sono")] // can't act for 3 turns, take more damage and awake if take damage
   slp,
   [Description("Molhado")] // decrease speed and accuracy and take more damage from water/ice/electric moves
-  wet
+  wet,
+  [Description("Desorientado")] // confused for 3 turns and hurt himself
+  confusion,
+  [Description("Espinhos")] // for 3 turns the enemy is hurted by spykes
+  spikes
 }

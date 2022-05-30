@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 638aee131e4643a4dba91cfeee8a11ce, type: 3}
+  m_Name: Confusion
+  m_EditorClassIdentifier: 
+  name: Desorientar
+  description: Faz com que o inimigo fique desorientado, podendo atacar a si mesmo.
+  type: 10
+  power: 0
+  accuracy: 100
+  sp: 5
+  category: 2
+  effects:
+    boosts: []
+    status: 0
+    volatileStatus: 11
+  target: 0
