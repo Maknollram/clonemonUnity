@@ -142,7 +142,12 @@ public enum Stat{
   [Description("Defesa Mágica")]
   SpDefense,
   [Description("Agilidade")]
-  Speed
+  Speed,
+  // only to be increased or decrease on battle
+  [Description("Precisão")]
+  Accuracy,
+  [Description("Evasão")]
+  Evasion
 }
 
 public class TypeChart{

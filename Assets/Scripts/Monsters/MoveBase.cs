@@ -13,6 +13,7 @@ public class MoveBase : ScriptableObject {
   [SerializeField] MonsterType type;
   [SerializeField] int power;
   [SerializeField] int accuracy;
+  [SerializeField] bool alwaysHits;
   [SerializeField] int sp;
 
   // [SerializeField] bool isSpecial;
@@ -32,6 +33,8 @@ public class MoveBase : ScriptableObject {
   public int Power { get { return power; } }
 
   public int Accuracy { get { return accuracy; } }
+
+  public bool AlwaysHits { get { return alwaysHits; } }
 
   public int SP { get { return sp; } }
 

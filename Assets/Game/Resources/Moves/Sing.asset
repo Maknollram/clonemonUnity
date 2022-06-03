@@ -15,10 +15,12 @@ MonoBehaviour:
   description: "Qualquer monstro que ouvir esta voz, dormir\xE1."
   type: 0
   power: 10
-  accuracy: 100
+  accuracy: 55
+  alwaysHits: 0
   sp: 5
   category: 2
   effects:
     boosts: []
     status: 9
+    volatileStatus: 0
   target: 0

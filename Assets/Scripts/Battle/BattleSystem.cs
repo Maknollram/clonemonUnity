@@ -122,28 +122,31 @@ public class BattleSystem : MonoBehaviour {
     move.SP--; // mudar para incrementar no final
     yield return dialogBox.TypeDialog($"{sourceUnit.Monster.Base.Name} usou {move.Base.Name}.");
 
-    sourceUnit.PlayAttackAnimation();
+    sourceUnit.PlayAttackAnimation(); // I changed a little
     yield return new WaitForSeconds(1f);
+    if(CheckIfMoveHits(move, sourceUnit.Monster, targetUnit.Monster)){
+      if (move.Base.Category == MoveCategory.Status){
+        yield return RunMoveEffects(sourceUnit, targetUnit, move, sourceUnit.Monster, targetUnit.Monster);
+      }else{
+        var damageDetails = targetUnit.Monster.TakeDamage(move, sourceUnit.Monster);
+    
+        if(damageDetails.TypeEffectiveness > 0f && move.Base.Category != MoveCategory.Status)
+          targetUnit.PlayHitAnimation();
 
-    if (move.Base.Category == MoveCategory.Status){
-      yield return RunMoveEffects(sourceUnit, targetUnit, move, sourceUnit.Monster, targetUnit.Monster);
+        yield return targetUnit.Hud.UpdateHP();
+        yield return ShowDamageDetails(targetUnit, damageDetails);
+      }
+
+      if (targetUnit.Monster.HP <= 0){
+        yield return dialogBox.TypeDialog($"{ targetUnit.Monster.Base.Name} morreu!");
+        targetUnit.PlayFaintAnimation();
+        sourceUnit.PlayVictoryAnimation();
+        yield return new WaitForSeconds(2f);
+        
+        CheckForBattleOver(targetUnit);
+      }
     }else{
-      var damageDetails = targetUnit.Monster.TakeDamage(move, sourceUnit.Monster);
-  
-      if(damageDetails.TypeEffectiveness > 0f && move.Base.Category != MoveCategory.Status)
-        targetUnit.PlayHitAnimation();
-
-      yield return targetUnit.Hud.UpdateHP();
-      yield return ShowDamageDetails(targetUnit, damageDetails);
-    }
-
-    if (targetUnit.Monster.HP <= 0){
-      yield return dialogBox.TypeDialog($"{ targetUnit.Monster.Base.Name} morreu!");
-      targetUnit.PlayFaintAnimation();
-      sourceUnit.PlayVictoryAnimation();
-      yield return new WaitForSeconds(2f);
-      
-      CheckForBattleOver(targetUnit);
+      yield return dialogBox.TypeDialog($"{ sourceUnit.Monster.Base.Name} errou o alvo!");
     }
 
     sourceUnit.Monster.OnAfterTurn();
@@ -200,6 +203,30 @@ public class BattleSystem : MonoBehaviour {
 
     yield return ShowStatusChanges(source);
     yield return ShowStatusChanges(target);
+  }
+
+  bool CheckIfMoveHits(Move move, Monster source, Monster target){
+    if(move.Base.AlwaysHits)
+      return true;
+
+    float moveAccuracy = move.Base.Accuracy;
+
+    int accuracy = source.StatBoosts[Stat.Accuracy];
+    int evasion = target.StatBoosts[Stat.Evasion];
+
+    var boostValues = new float[] {1f, 4f/3f, 5f/3f, 2f, 7f/3f, 8f/3f, 3f}; 
+
+    if(accuracy > 0)
+      moveAccuracy *= boostValues[accuracy];
+    else
+      moveAccuracy /= boostValues[-accuracy];
+
+    if(evasion > 0)
+      moveAccuracy /= boostValues[evasion];
+    else
+      moveAccuracy *= boostValues[-evasion];
+
+    return UnityEngine.Random.Range(1, 101) <= moveAccuracy;
   }
 
   IEnumerator ShowStatusChanges(Monster monster){
