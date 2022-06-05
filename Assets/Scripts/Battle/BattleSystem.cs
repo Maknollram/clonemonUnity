@@ -3,25 +3,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum BattleState { Start, ActionSelection, MoveSelection, PerformMove, Busy, PartyScreen, BattleOver}
+public enum BattleState { Start, ActionSelection, MoveSelection, RunningTurn, Busy, PartyScreen, BattleOver}
+
+public enum BattleAction { Move, SwitchMonster, UseItem, Run }
 
 public class BattleSystem : MonoBehaviour {
 
+  // psvita controller
   private const string joystick1 = "joystick 1 button ";
-	private const int CROSS = 0;
-	private const int CIRCLE = 1;
-	private const int SQUARE = 2;
-	private const int TRIANGLE = 3;
-	private const int L = 4;
-	private const int R = 5;
-	private const int SELECT = 6;
-	private const int START = 7;
-	private const int UP = 8;
-	private const int RIGHT = 9;
-	private const int DOWN = 10;
-	private const int LEFT = 11;
+  private const int CROSS = 0;
+  private const int CIRCLE = 1;
+  private const int SQUARE = 2;
+  private const int TRIANGLE = 3;
+  private const int L = 4;
+  private const int R = 5;
+  private const int SELECT = 6;
+  private const int START = 7;
+  private const int UP = 8;
+  private const int RIGHT = 9;
+  private const int DOWN = 10;
+  private const int LEFT = 11;
+  // ======================================================
 
-	[SerializeField] BattleUnit playerUnit;
+  [SerializeField] BattleUnit playerUnit;
   [SerializeField] BattleUnit enemyUnit;
   [SerializeField] BattleDialogBox dialogBox;
   [SerializeField] PartyScreen partyScreen;
@@ -29,6 +33,7 @@ public class BattleSystem : MonoBehaviour {
   public event Action<bool> OnBattleOver;
 
   BattleState state;
+  BattleState? prevState;
   int currentAction;
   int currentMove;
   int currentMember;
@@ -52,14 +57,7 @@ public class BattleSystem : MonoBehaviour {
 
     yield return dialogBox.TypeDialog($"Um {enemyUnit.Monster.Base.Name} apareceu.");
 
-    ChooseFirstTurn();
-  }
-
-  void ChooseFirstTurn(){
-    if (playerUnit.Monster.Speed >= enemyUnit.Monster.Speed)
-      ActionSelection();
-    else
-      StartCoroutine(EnemyMove());
+    ActionSelection();
   }
 
   void BattleOver(bool finished){
@@ -81,29 +79,53 @@ public class BattleSystem : MonoBehaviour {
   }
 
   void MoveSelection(){
-    state = BattleState.MoveSelection;
+    state = BattleState.RunningTurn;
     dialogBox.EnableActionSelector(false);
     dialogBox.EnableDialogText(false);
     dialogBox.EnableMoveSelector(true);
   }
 
-  IEnumerator PlayerMove(){
-    state = BattleState.PerformMove;
+  IEnumerator RunTurns(BattleAction playerAction){
+    state = BattleState.RunningTurn;
 
-    var move = playerUnit.Monster.Moves[currentMove];
-    yield return RunMove(playerUnit, enemyUnit, move);
+    if(playerAction == BattleAction.Move){
+      playerUnit.Monster.CurrentMove = playerUnit.Monster.Moves[currentMove];
+      enemyUnit.Monster.CurrentMove = enemyUnit.Monster.GetRandomMove();
 
-    if (state == BattleState.PerformMove)
-      StartCoroutine(EnemyMove());
-  }
+      // verify who goes first
+      bool playerGoesFirst = playerUnit.Monster.Speed >= enemyUnit.Monster.Speed;
 
-  IEnumerator EnemyMove(){
-    state = BattleState.PerformMove;
+      var firstUnit = (playerGoesFirst) ? playerUnit : enemyUnit;
+      var secondUnit = (playerGoesFirst) ? enemyUnit : playerUnit;
 
-    var move = enemyUnit.Monster.GetRandomMove();
-    yield return RunMove(enemyUnit, playerUnit, move);
+      var secondMonster = secondUnit.Monster;
 
-    if (state == BattleState.PerformMove)
+      // first turn
+      yield return RunMove(firstUnit, secondUnit, firstUnit.Monster.CurrentMove);
+      yield return RunAfterTurn(firstUnit, secondUnit);
+      if(state == BattleState.BattleOver) yield break;
+
+      if(secondMonster.HP > 0){
+        // second turn
+        yield return RunMove(secondUnit, firstUnit, secondUnit.Monster.CurrentMove);
+        yield return RunAfterTurn(secondUnit, firstUnit);
+        if(state == BattleState.BattleOver) yield break;
+      }
+    }else{
+      if(playerAction == BattleAction.SwitchMonster){
+        var selectedMonster = playerParty.Monsters[currentMember];
+        state = BattleState.Busy;
+        yield return SwitchMonster(selectedMonster);
+      }
+
+      // enemy turn
+      var enemyMove = enemyUnit.Monster.GetRandomMove();
+      yield return RunMove(enemyUnit, playerUnit, enemyMove);
+      yield return RunAfterTurn(enemyUnit, playerUnit);
+      if(state == BattleState.BattleOver) yield break;
+    }
+
+    if(state != BattleState.BattleOver)
       ActionSelection();
   }
 
@@ -158,19 +180,6 @@ public class BattleSystem : MonoBehaviour {
     }else{
       yield return dialogBox.TypeDialog($"{ sourceUnit.Monster.Base.Name} errou o alvo!");
     }
-
-    sourceUnit.Monster.OnAfterTurn();
-    yield return ShowStatusChanges(sourceUnit.Monster);
-    yield return sourceUnit.Hud.UpdateHP();
-
-    if (sourceUnit.Monster.HP <= 0){
-      yield return dialogBox.TypeDialog($"{ sourceUnit.Monster.Base.Name} morreu!");
-      sourceUnit.PlayFaintAnimation();
-      targetUnit.PlayVictoryAnimation();
-      yield return new WaitForSeconds(2f);
-      
-      CheckForBattleOver(sourceUnit);
-    }
   }
 
   // correcao, alterar para ficar com somente souceUnit e targetUnit
@@ -211,6 +220,25 @@ public class BattleSystem : MonoBehaviour {
 
     yield return ShowStatusChanges(source);
     yield return ShowStatusChanges(target);
+  }
+
+  IEnumerator RunAfterTurn(BattleUnit sourceUnit, BattleUnit targetUnit){
+    if(state == BattleState.BattleOver) yield break;
+    yield return new WaitUntil(() => state == BattleState.RunningTurn);
+
+    // statuses like brn and psn do damage after turn
+    sourceUnit.Monster.OnAfterTurn();
+    yield return ShowStatusChanges(sourceUnit.Monster);
+    yield return sourceUnit.Hud.UpdateHP();
+
+    if (sourceUnit.Monster.HP <= 0){
+      yield return dialogBox.TypeDialog($"{ sourceUnit.Monster.Base.Name} morreu!");
+      sourceUnit.PlayFaintAnimation();
+      targetUnit.PlayVictoryAnimation();
+      yield return new WaitForSeconds(2f);
+      
+      CheckForBattleOver(sourceUnit);
+    }
   }
 
   bool CheckIfMoveHits(Move move, Monster source, Monster target){
@@ -273,7 +301,7 @@ public class BattleSystem : MonoBehaviour {
   public void HandleUpdate(){
     if (state == BattleState.ActionSelection){
       HandleActionSelection();
-    }else if (state == BattleState.MoveSelection){
+    }else if (state == BattleState.RunningTurn){
       HandleMoveSelection();
     }else if (state == BattleState.PartyScreen){
       HandlePartySelection();
@@ -313,7 +341,8 @@ public class BattleSystem : MonoBehaviour {
           // Slap an item
 
         }else if(currentAction == 2){
-          // Take your monster Comrade
+          // Take your monster comrade
+          prevState = state;
           OpenPartyScreen();
         }else if(currentAction == 3){
           // Run like a crazy bitch MAN
@@ -339,7 +368,7 @@ public class BattleSystem : MonoBehaviour {
     if (Input.GetKeyDown(joystick1 + CROSS) || Input.GetKeyDown(KeyCode.Keypad2)){
       dialogBox.EnableMoveSelector(false);
       dialogBox.EnableDialogText(true);
-      StartCoroutine(PlayerMove());
+      StartCoroutine(RunTurns(BattleAction.Move));
     }else if(Input.GetKeyDown(joystick1 + CIRCLE) || Input.GetKeyDown(KeyCode.Keypad3)){
       dialogBox.EnableMoveSelector(false);
       dialogBox.EnableDialogText(true);
@@ -380,8 +409,14 @@ public class BattleSystem : MonoBehaviour {
       }
 
       partyScreen.gameObject.SetActive(false);
-      state = BattleState.Busy;
-      StartCoroutine(SwitchMonster(selectedMember));
+
+      if(prevState == BattleState.ActionSelection){
+        prevState = null;
+        StartCoroutine(RunTurns(BattleAction.SwitchMonster));
+      }else{
+        state = BattleState.Busy;
+        StartCoroutine(SwitchMonster(selectedMember));
+      }
     }else if (Input.GetKeyDown(joystick1 + CIRCLE) || Input.GetKeyDown(KeyCode.Keypad3)){
       partyScreen.gameObject.SetActive(false);
       ActionSelection();
@@ -389,11 +424,10 @@ public class BattleSystem : MonoBehaviour {
   }
 
   IEnumerator SwitchMonster(Monster newMonster){
-    bool currentMonsterFainted = true;
-
     if (playerUnit.Monster.HP > 0){
-      currentMonsterFainted = false;
-      yield return dialogBox.TypeDialog($"Retorne {playerUnit.Monster.Base.Name}.");
+      var randomBackText = new List<string> { "Retorne", "Volte", "Regresse", "Venha", "Já fez o bastante" };
+      int randomBackIndex = UnityEngine.Random.Range(0, randomBackText.Count);
+      yield return dialogBox.TypeDialog($"{randomBackText[randomBackIndex]} {playerUnit.Monster.Base.Name}.");
       playerUnit.PlayFaintAnimation();
       yield return new WaitForSeconds(1.5f);
     }
@@ -401,11 +435,11 @@ public class BattleSystem : MonoBehaviour {
     playerUnit.Setup(newMonster);
     dialogBox.SetMoveNames(newMonster.Moves);
 
-    yield return dialogBox.TypeDialog($"Arrebenta {newMonster.Base.Name}.");
+    // random text on init battle
+    var randomInitialText = new List<string> { "Pega ele", "Arrebenta", "Mostre para que veio", "Não vacile", "Vamos nessa" };
+    int randomInitialIndex = UnityEngine.Random.Range(0, randomInitialText.Count);
+    yield return dialogBox.TypeDialog($"{randomInitialText[randomInitialIndex]} {newMonster.Base.Name}.");
 
-    if (currentMonsterFainted)
-      ChooseFirstTurn();
-    else
-      StartCoroutine(EnemyMove());
+    state = BattleState.RunningTurn;
   }
 }
