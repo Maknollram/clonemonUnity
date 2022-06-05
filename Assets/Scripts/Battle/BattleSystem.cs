@@ -126,7 +126,7 @@ public class BattleSystem : MonoBehaviour {
     yield return new WaitForSeconds(1f);
     if(CheckIfMoveHits(move, sourceUnit.Monster, targetUnit.Monster)){
       if (move.Base.Category == MoveCategory.Status){
-        yield return RunMoveEffects(sourceUnit, targetUnit, move, sourceUnit.Monster, targetUnit.Monster);
+        yield return RunMoveEffects(sourceUnit, targetUnit, move.Base.Effects, sourceUnit.Monster, targetUnit.Monster, move.Base.Target);
       }else{
         var damageDetails = targetUnit.Monster.TakeDamage(move, sourceUnit.Monster);
     
@@ -135,6 +135,16 @@ public class BattleSystem : MonoBehaviour {
 
         yield return targetUnit.Hud.UpdateHP();
         yield return ShowDamageDetails(targetUnit, damageDetails);
+      }
+
+      if (move.Base.Secondaries != null && move.Base.Secondaries.Count > 0 && targetUnit.Monster.HP > 0){
+        foreach (var secondary in move.Base.Secondaries)
+        {
+          var rnd = UnityEngine.Random.Range(1, 101);
+
+          if (rnd <= secondary.Chance)
+            yield return RunMoveEffects(sourceUnit, targetUnit, secondary, sourceUnit.Monster, targetUnit.Monster, secondary.Target);
+        }
       }
 
       if (targetUnit.Monster.HP <= 0){
@@ -164,12 +174,10 @@ public class BattleSystem : MonoBehaviour {
   }
 
   // correcao, alterar para ficar com somente souceUnit e targetUnit
-  IEnumerator RunMoveEffects(BattleUnit sourceUnit, BattleUnit targetUnit, Move move, Monster source, Monster target){
+  IEnumerator RunMoveEffects(BattleUnit sourceUnit, BattleUnit targetUnit, MoveEffects effects, Monster source, Monster target, MoveTarget moveTarget){
     //stats boosts
-    var effects = move.Base.Effects;
-
     if (effects.Boosts != null){
-      if (move.Base.Target == MoveTarget.Self){
+      if (moveTarget == MoveTarget.Self){
         source.ApplyBoosts(effects.Boosts);
         sourceUnit.PlayStatBoostAnimation();
       }
@@ -182,7 +190,7 @@ public class BattleSystem : MonoBehaviour {
     // status ailments (ailments, weather, etc)
     if (effects.Status != ConditionID.none){
       target.SetStatus(effects.Status);
-      if (move.Base.Target == MoveTarget.Self){
+      if (moveTarget == MoveTarget.Self){
         sourceUnit.PlayStatusAilmentsAnimation();
       }
       else{
@@ -193,7 +201,7 @@ public class BattleSystem : MonoBehaviour {
     // volatile status conditions (confusion, etc)
     if (effects.VolatileStatus != ConditionID.none){
       target.SetVolatileStatus(effects.VolatileStatus);
-      if (move.Base.Target == MoveTarget.Self){
+      if (moveTarget == MoveTarget.Self){
         sourceUnit.PlayStatusAilmentsAnimation();
       }
       else{
