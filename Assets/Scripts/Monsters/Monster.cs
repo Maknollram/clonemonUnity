@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Acme.Utils;
+using System.Linq;
 
 [System.Serializable]
 public class Monster {
@@ -199,6 +200,12 @@ public class Monster {
   public Move GetRandomMove(){
     int r = Random.Range(0, Moves.Count);
     return Moves[r];
+
+    // correcao, inimigo usar somente moves que tenham mais do que 0 sp, colocar moves padrao caso todos os normais tenham acabado
+    // var movesWithSP = Moves.Where(m => m.SP > 0).ToList();
+
+    // int r = Random.Range(0, movesWithSP.Count);
+    // return movesWithSP[r];
   }
 
   public bool OnBeforeMove(){

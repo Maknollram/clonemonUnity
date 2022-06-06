@@ -15,8 +15,7 @@ public class MoveBase : ScriptableObject {
   [SerializeField] int accuracy;
   [SerializeField] bool alwaysHits;
   [SerializeField] int sp;
-
-  // [SerializeField] bool isSpecial;
+  [SerializeField] int priority;
 
   [SerializeField] MoveCategory category;
 
@@ -40,6 +39,8 @@ public class MoveBase : ScriptableObject {
 
   public int SP { get { return sp; } }
 
+  public int Priority { get { return priority; } }
+
   public MoveCategory Category { get { return category; } }
 
   public MoveEffects Effects { get { return effects; } }
@@ -47,8 +48,6 @@ public class MoveBase : ScriptableObject {
   public List<SecondaryEffects> Secondaries { get { return secondaries; } }
 
   public MoveTarget Target { get { return target; } }
-
-  // public bool IsSpecial { get { return isSpecial; } } 
   }
 
   [System.Serializable] //to add to unity system, this case on monster move

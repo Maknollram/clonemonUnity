@@ -75,6 +75,14 @@ public class BattleDialogBox : MonoBehaviour {
 
     spText.text = " Uso " + move.SP + "/" + move.Base.SP;
     typeText.text = "Tipo " + move.Base.Type.ToString();
+
+    int spPercent = (int)System.Math.Round((double)(100 * move.SP) / move.Base.SP);
+    if(move.SP == 0)
+      spText.color = Color.red;
+    else if (spPercent <= 30)
+      spText.color = Color.yellow;
+    else
+      spText.color = Color.black;
   }
 
   public void SetMoveNames(List<Move> moves)

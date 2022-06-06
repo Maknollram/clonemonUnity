@@ -10892,8 +10892,6 @@ MonoBehaviour:
   wildMonsters:
   - _base: {fileID: 11400000, guid: 5d31c1736bb673b44b0be73734abb56b, type: 2}
     level: 10
-  - _base: {fileID: 11400000, guid: 96ac8a6408919cd40a8d307f5ce6e64e, type: 2}
-    level: 10
 --- !u!1001 &1705818283
 Prefab:
   m_ObjectHideFlags: 0
