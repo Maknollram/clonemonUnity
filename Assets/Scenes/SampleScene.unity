@@ -9510,8 +9510,8 @@ GameObject:
   - component: {fileID: 944743614}
   - component: {fileID: 944743613}
   - component: {fileID: 944743612}
-  - component: {fileID: 944743615}
   - component: {fileID: 944743616}
+  - component: {fileID: 944743615}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -9600,24 +9600,57 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &944743615
-Animator:
-  serializedVersion: 3
+--- !u!114 &944743615
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 944743611}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 1bc2d6780c8b2f145a043d97b687915a, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3536ceae1d265aa4488773b351da93d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkUpSprites:
+  - {fileID: 21300018, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300020, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300022, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300024, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  walkDownSprites:
+  - {fileID: 21300000, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300002, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300004, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300006, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  walkRightSprites:
+  - {fileID: 21300028, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300030, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300032, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300034, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  walkLeftSprites:
+  - {fileID: 21300010, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300012, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300014, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300016, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  walkUpRightSprites:
+  - {fileID: 21300046, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300048, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300050, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300052, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  walkDownRightSprites:
+  - {fileID: 21300054, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300056, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300058, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300060, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  walkUpLeftSprites:
+  - {fileID: 21300064, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300066, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300068, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300070, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  walkDownLeftSprites:
+  - {fileID: 21300036, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300038, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300040, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300042, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
 --- !u!114 &944743616
 MonoBehaviour:
   m_ObjectHideFlags: 0

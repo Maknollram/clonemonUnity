@@ -60,6 +60,7 @@
      <Compile Include="Assets\Scripts\Battle\HpBar.cs" />
      <Compile Include="Assets\Scripts\Battle\PartyMemberUI.cs" />
      <Compile Include="Assets\Scripts\Battle\PartyScreen.cs" />
+     <Compile Include="Assets\Scripts\Character\CharacterAnimator.cs" />
      <Compile Include="Assets\Scripts\Character\NPCController.cs" />
      <Compile Include="Assets\Scripts\Character\PlayerController.cs" />
      <Compile Include="Assets\Scripts\Data\ConditionsDB.cs" />
@@ -75,6 +76,7 @@
      <Compile Include="Assets\Scripts\Monsters\Move.cs" />
      <Compile Include="Assets\Scripts\Monsters\MoveBase.cs" />
      <Compile Include="Assets\Scripts\Util\EnumExtensions.cs" />
+     <Compile Include="Assets\Scripts\Util\SpriteAnimator.cs" />
      <None Include="Assets\Art\gameArt\livearea\contents\template.xml" />
  <Reference Include="UnityEditor.StandardEvents">
  <HintPath>C:/Users/Maknollram/Documents/Clonemon/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
