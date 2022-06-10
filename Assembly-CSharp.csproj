@@ -60,6 +60,7 @@
      <Compile Include="Assets\Scripts\Battle\HpBar.cs" />
      <Compile Include="Assets\Scripts\Battle\PartyMemberUI.cs" />
      <Compile Include="Assets\Scripts\Battle\PartyScreen.cs" />
+     <Compile Include="Assets\Scripts\Character\Character.cs" />
      <Compile Include="Assets\Scripts\Character\CharacterAnimator.cs" />
      <Compile Include="Assets\Scripts\Character\NPCController.cs" />
      <Compile Include="Assets\Scripts\Character\PlayerController.cs" />
@@ -67,6 +68,7 @@
      <Compile Include="Assets\Scripts\GameController.cs" />
      <Compile Include="Assets\Scripts\Gameplay\Dialog.cs" />
      <Compile Include="Assets\Scripts\Gameplay\DialogManager.cs" />
+     <Compile Include="Assets\Scripts\Gameplay\GameLayers.cs" />
      <Compile Include="Assets\Scripts\Gameplay\Interactable.cs" />
      <Compile Include="Assets\Scripts\Gameplay\MapArea.cs" />
      <Compile Include="Assets\Scripts\Monsters\Condition.cs" />
