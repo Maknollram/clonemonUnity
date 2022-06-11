@@ -9513,7 +9513,9 @@ GameObject:
   - component: {fileID: 944743616}
   - component: {fileID: 944743615}
   - component: {fileID: 944743617}
-  m_Layer: 0
+  - component: {fileID: 944743619}
+  - component: {fileID: 944743618}
+  m_Layer: 11
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9674,6 +9676,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+--- !u!61 &944743618
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 944743611}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.021236539, y: 0.007078886}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1.3125}
+    newSize: {x: 1.875, y: 2.25}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.56111073, y: 0.98687315}
+  m_EdgeRadius: 0
+--- !u!50 &944743619
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 944743611}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &970755232
 GameObject:
   m_ObjectHideFlags: 0
@@ -9903,6 +9950,9 @@ MonoBehaviour:
   grassLayer:
     serializedVersion: 2
     m_Bits: 512
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 2048
 --- !u!1 &1031293157
 GameObject:
   m_ObjectHideFlags: 0
@@ -10638,6 +10688,7 @@ MonoBehaviour:
     lines:
     - "J\xE1 tentou andar na grama?"
     - "Pode se surpreender com o que ir\xE1 encontrar."
+    - "Na pr\xF3xima vers\xE3o do jogo lhe ensino a capturar os monstros."
   movementPattern: []
   timeBetweenPattern: 0
 --- !u!61 &1339432585
@@ -10738,7 +10789,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1339432581}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.5, y: 0.48, z: 0}
+  m_LocalPosition: {x: 3.5, y: 0.8, z: 0}
   m_LocalScale: {x: 5, y: 5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -11621,25 +11672,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkUpSprites:
-  - {fileID: 21300020, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300046, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300020, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300072, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
+  - {fileID: 21300098, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
+  - {fileID: 21300124, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
+  - {fileID: 21300150, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
   walkDownSprites:
   - {fileID: 21300020, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
   - {fileID: 21300046, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300020, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
   - {fileID: 21300072, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
   walkRightSprites:
+  - {fileID: 21300254, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
+  - {fileID: 21300280, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
+  - {fileID: 21300306, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
+  walkLeftSprites:
   - {fileID: 21300176, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
   - {fileID: 21300202, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300176, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
   - {fileID: 21300228, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  walkLeftSprites:
-  - {fileID: 21300098, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300124, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300098, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300150, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
   walkUpRightSprites: []
   walkDownRightSprites: []
   walkUpLeftSprites: []
@@ -11774,7 +11821,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1768520234}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.54, y: -0.4, z: 0}
+  m_LocalPosition: {x: -3.5, y: -0.8, z: 0}
   m_LocalScale: {x: 5, y: 5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -12203,29 +12250,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkUpSprites:
-  - {fileID: 21300022, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300046, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300020, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300072, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
+  - {fileID: 21300002, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
+  - {fileID: 21300002, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
+  - {fileID: 21300002, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
+  - {fileID: 21300002, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
   walkDownSprites:
   - {fileID: 21300022, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
   - {fileID: 21300022, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
   - {fileID: 21300022, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
   - {fileID: 21300022, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
   walkRightSprites:
+  - {fileID: 21300256, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
+  - {fileID: 21300282, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
+  - {fileID: 21300308, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
+  walkLeftSprites:
   - {fileID: 21300178, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
   - {fileID: 21300204, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300178, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
   - {fileID: 21300230, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  walkLeftSprites:
-  - {fileID: 21300100, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300126, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300100, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300152, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
   walkUpRightSprites: []
   walkDownRightSprites: []
   walkUpLeftSprites: []
-  walkDownLeftSprites: []
+  walkDownLeftSprites:
+  - {fileID: 21300018, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
 --- !u!114 &2056481084
 MonoBehaviour:
   m_ObjectHideFlags: 0

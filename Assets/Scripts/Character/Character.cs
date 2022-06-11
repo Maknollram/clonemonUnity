@@ -22,7 +22,7 @@ public class Character : MonoBehaviour {
     targetPos.x += moveVec.x;
     targetPos.y += moveVec.y;
 
-    if(!IsWalkable(targetPos))
+    if(!IsPathClear(targetPos))
       yield break;
     
     IsMoving = true;
@@ -43,6 +43,16 @@ public class Character : MonoBehaviour {
     animator.IsMoving = IsMoving;
   }
 
+  private bool IsPathClear(Vector3 targetPos){
+    var diff = targetPos - transform.position;
+    var dir = diff.normalized;
+
+    if (Physics2D.BoxCast(transform.position + dir, new Vector2(0.2f, 0.2f), 0f, dir, diff.magnitude - 1, GameLayers.i.SolidLayer | GameLayers.i.InteractableLayer | GameLayers.i.PlayerLayer) == true)
+      return false;
+
+    return true;
+  }
+
   private bool IsWalkable(Vector3 targetPos){
     if (Physics2D.OverlapCircle(targetPos, 0.2f, GameLayers.i.SolidLayer | GameLayers.i.InteractableLayer) != null)
     {
@@ -50,6 +60,20 @@ public class Character : MonoBehaviour {
     }
 
     return true;
+  }
+
+  public void LookTowards(Vector3 targetPos){
+    var xdiff = Mathf.Floor(targetPos.x) - Mathf.Floor(transform.position.x);
+    var ydiff = Mathf.Floor(targetPos.y) - Mathf.Floor(transform.position.y);
+
+
+    // what is commented is to remove the function of the npc look diagonally
+    // if(xdiff == 0 || ydiff == 0){
+      animator.MoveX = Mathf.Clamp(xdiff, -1f, 1f);
+      animator.MoveY = Mathf.Clamp(ydiff, -1f, 1f);
+    // }else{
+    //   Debug.Log("Looking diagonally.");
+    // }
   }
 
   public CharacterAnimator Animator{ get => animator; }
