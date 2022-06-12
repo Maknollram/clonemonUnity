@@ -17,12 +17,14 @@ public class GameController : MonoBehaviour {
 
   GameState state;
 
+  public static GameController Instance { get; private set; }
+
   private void Awake(){
+    Instance = this;
     ConditionsDB.Init();
   }
 
-  private void Start()
-  {
+  private void Start(){
     playerController.OnEncountered += StartBattle;
     battleSystem.OnBattleOver += EndBattle;
 
@@ -44,8 +46,7 @@ public class GameController : MonoBehaviour {
     };
   }
 
-  void StartBattle()
-  {
+  void StartBattle(){
     state = GameState.Battle;
     battleSystem.gameObject.SetActive(true);
     worldCamera.gameObject.SetActive(false);
@@ -56,25 +57,37 @@ public class GameController : MonoBehaviour {
     battleSystem.StartBattle(playerParty, wildMonster);
   }
 
-  void EndBattle(bool won)
-  {
+  TrainerController trainer;
+
+  public void StartTrainerBattle(TrainerController trainer){
+    state = GameState.Battle;
+    battleSystem.gameObject.SetActive(true);
+    worldCamera.gameObject.SetActive(false);
+
+    this.trainer = trainer;
+    var playerParty = playerController.GetComponent<MonsterParty>();
+    var trainerParty = trainer.GetComponent<MonsterParty>();
+
+    battleSystem.StartTrainerBattle(playerParty, trainerParty);
+  }
+
+  void EndBattle(bool won){
+    if(trainer != null && won == true){
+      trainer.BattleLost();
+      trainer = null;
+    }
+
     state = GameState.FreeRoam;
     battleSystem.gameObject.SetActive(false);
     worldCamera.gameObject.SetActive(true);
   }
 
-	private void Update ()
-  {
-		if (state == GameState.FreeRoam)
-    {
+	private void Update(){
+		if (state == GameState.FreeRoam){
       playerController.HandleUpdate();
-    }
-    else if (state == GameState.Battle)
-    {
+    }else if (state == GameState.Battle){
       battleSystem.HandleUpdate();
-    }
-    else if (state == GameState.Dialog)
-    {
+    }else if (state == GameState.Dialog){
       DialogManager.Instance.HandleUpdate();
     }
 	}

@@ -35,10 +35,15 @@ public class BattleUnit : MonoBehaviour {
     else
       image.sprite = Monster.Base.FrontSprite;
 
+    hud.gameObject.SetActive(true);
     hud.SetData(monster);
 
     image.color = originalColor;
     PlayEnterAnimation();
+  }
+
+  public void Clear(){
+    hud.gameObject.SetActive(false);
   }
 
   public void PlayEnterAnimation(){

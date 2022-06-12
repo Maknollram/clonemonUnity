@@ -2,8 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public enum BattleState { Start, ActionSelection, MoveSelection, RunningTurn, Busy, PartyScreen, BattleOver}
+public enum BattleState { Start, ActionSelection, MoveSelection, RunningTurn, Busy, PartyScreen, AboutToUse, BattleOver}
 
 public enum BattleAction { Move, SwitchMonster, UseItem, Run }
 
@@ -29,6 +30,8 @@ public class BattleSystem : MonoBehaviour {
   [SerializeField] BattleUnit enemyUnit;
   [SerializeField] BattleDialogBox dialogBox;
   [SerializeField] PartyScreen partyScreen;
+  [SerializeField] Image playerImage;
+  [SerializeField] Image trainerImage;
 
   public event Action<bool> OnBattleOver;
 
@@ -37,9 +40,16 @@ public class BattleSystem : MonoBehaviour {
   int currentAction;
   int currentMove;
   int currentMember;
+  bool aboutToUseChoice = true;
 
   MonsterParty playerParty;
+  MonsterParty trainerParty;
   Monster wildMonster;
+
+  bool isTrainerBattle = false;
+
+  PlayerController player;
+  TrainerController trainer;
 
   public void StartBattle(MonsterParty playerParty, Monster wildMonster){
     this.playerParty = playerParty;
@@ -47,15 +57,60 @@ public class BattleSystem : MonoBehaviour {
     StartCoroutine(SetupBattle());
   }
 
+  public void StartTrainerBattle(MonsterParty playerParty, MonsterParty trainerParty){
+    this.playerParty = playerParty;
+    this.trainerParty = trainerParty;
+
+    isTrainerBattle = true;
+    player = playerParty.GetComponent<PlayerController>();
+    trainer = trainerParty.GetComponent<TrainerController>();
+
+    StartCoroutine(SetupBattle());
+  }
+
   public IEnumerator SetupBattle(){
-    playerUnit.Setup(playerParty.GetHealthyMonster());
-    enemyUnit.Setup(wildMonster);
+    // disable monsters hud
+    playerUnit.Clear();
+    enemyUnit.Clear();
+
+    // verification if is wild monster battle or trainer battle
+    if(!isTrainerBattle){
+      playerUnit.Setup(playerParty.GetHealthyMonster());
+      enemyUnit.Setup(wildMonster);
+    
+      dialogBox.SetMoveNames(playerUnit.Monster.Moves);
+
+      yield return dialogBox.TypeDialog($"Um {enemyUnit.Monster.Base.Name} apareceu.");
+    }else{
+      // hide monsters sprites
+      playerUnit.gameObject.SetActive(false);
+      enemyUnit.gameObject.SetActive(false);
+
+      // show trainer and player sprites
+      playerImage.gameObject.SetActive(true);
+      trainerImage.gameObject.SetActive(true);
+      playerImage.sprite = player.Sprite;
+      trainerImage.sprite = trainer.Sprite;
+
+      yield return dialogBox.TypeDialog($"{trainer.Name} desafiou {player.Name} para uma batalha de monstros.");
+
+      // trainer first monster
+      trainerImage.gameObject.SetActive(false);
+      enemyUnit.gameObject.SetActive(true);
+      var enemyMonster = trainerParty.GetHealthyMonster();
+      enemyUnit.Setup(enemyMonster);
+      yield return dialogBox.TypeDialog($"{trainer.Name} liberou {enemyMonster.Base.Name}!");
+
+      // player first monster
+      playerImage.gameObject.SetActive(false);
+      playerUnit.gameObject.SetActive(true);
+      var playerMonster = playerParty.GetHealthyMonster();
+      playerUnit.Setup(playerMonster);
+      yield return dialogBox.TypeDialog($"{RandomBattleText(true)} {playerMonster.Base.Name}");
+      dialogBox.SetMoveNames(playerUnit.Monster.Moves);
+    }
 
     partyScreen.Init();
-
-    dialogBox.SetMoveNames(playerUnit.Monster.Moves);
-
-    yield return dialogBox.TypeDialog($"Um {enemyUnit.Monster.Base.Name} apareceu.");
 
     ActionSelection();
   }
@@ -83,6 +138,14 @@ public class BattleSystem : MonoBehaviour {
     dialogBox.EnableActionSelector(false);
     dialogBox.EnableDialogText(false);
     dialogBox.EnableMoveSelector(true);
+  }
+
+  IEnumerator AboutToUse(Monster newMonster){
+    state = BattleState.Busy;
+    yield return dialogBox.TypeDialog($"{trainer.Name} liberará {newMonster.Base.Name}. Deseja trocar de monstro?");
+
+    state = BattleState.AboutToUse;
+    dialogBox.EnableChoiceBox(true);
   }
 
   IEnumerator RunTurns(BattleAction playerAction){
@@ -246,6 +309,7 @@ public class BattleSystem : MonoBehaviour {
       yield return new WaitForSeconds(2f);
       
       CheckForBattleOver(sourceUnit);
+      yield return new WaitUntil(() => state == BattleState.RunningTurn);
     }
   }
 
@@ -288,8 +352,17 @@ public class BattleSystem : MonoBehaviour {
         OpenPartyScreen();
       else
         BattleOver(false);
-    }else
-      BattleOver(true);
+    }else{
+      if(!isTrainerBattle){
+        BattleOver(true);
+      }else{
+        var nextMonster = trainerParty.GetHealthyMonster();
+        if(nextMonster != null)
+          StartCoroutine(AboutToUse(nextMonster));
+        else
+          BattleOver(true);
+      }
+    }
   }
 
   IEnumerator ShowDamageDetails(BattleUnit battleUnit, DamageDetails damageDetails){
@@ -313,6 +386,8 @@ public class BattleSystem : MonoBehaviour {
       HandleMoveSelection();
     }else if (state == BattleState.PartyScreen){
       HandlePartySelection();
+    }else if (state == BattleState.AboutToUse){
+      HandleAboutToUse();
     }
   }
 
@@ -430,16 +505,48 @@ public class BattleSystem : MonoBehaviour {
         StartCoroutine(SwitchMonster(selectedMember));
       }
     }else if (Input.GetKeyDown(joystick1 + CIRCLE) || Input.GetKeyDown(KeyCode.Keypad3)){
+      if (playerUnit.Monster.HP <= 0){
+        partyScreen.SetMessageText("Você deve escolher um monstro para continuar a batalhar.");
+        return;
+      }
+
       partyScreen.gameObject.SetActive(false);
-      ActionSelection();
+
+      if (prevState == BattleState.AboutToUse){
+        prevState = null;
+        StartCoroutine(SendNextTrainerMonster());
+      }else
+        ActionSelection();
+    }
+  }
+
+  void HandleAboutToUse(){
+    if (Input.GetKeyDown(joystick1 + UP) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(joystick1 + DOWN) || Input.GetKeyDown(KeyCode.DownArrow))
+      aboutToUseChoice = !aboutToUseChoice;
+
+    dialogBox.UpdateChoiceBox(aboutToUseChoice);
+
+    if (Input.GetKeyDown(joystick1 + CROSS) || Input.GetKeyDown(KeyCode.Keypad2)){
+      dialogBox.EnableChoiceBox(false);
+      if(aboutToUseChoice == true){
+        // yes option
+        prevState = BattleState.AboutToUse;
+        OpenPartyScreen();
+      }else{
+        // no option
+        StartCoroutine(SendNextTrainerMonster());
+      }
+    }else if (Input.GetKeyDown(joystick1 + CIRCLE) || Input.GetKeyDown(KeyCode.Keypad3)){
+      dialogBox.EnableChoiceBox(false);
+      StartCoroutine(SendNextTrainerMonster());
     }
   }
 
   IEnumerator SwitchMonster(Monster newMonster){
     if (playerUnit.Monster.HP > 0){
-      var randomBackText = new List<string> { "Retorne", "Volte", "Regresse", "Venha", "Já fez o bastante" };
-      int randomBackIndex = UnityEngine.Random.Range(0, randomBackText.Count);
-      yield return dialogBox.TypeDialog($"{randomBackText[randomBackIndex]} {playerUnit.Monster.Base.Name}.");
+      // var randomBackText = new List<string> { "Retorne", "Volte", "Regresse", "Venha", "Já fez o bastante" };
+      // int randomBackIndex = UnityEngine.Random.Range(0, randomBackText.Count);
+      yield return dialogBox.TypeDialog($"{RandomBattleText(false)} {playerUnit.Monster.Base.Name}.");
       playerUnit.PlayFaintAnimation();
       yield return new WaitForSeconds(1.5f);
     }
@@ -448,10 +555,37 @@ public class BattleSystem : MonoBehaviour {
     dialogBox.SetMoveNames(newMonster.Moves);
 
     // random text on init battle
-    var randomInitialText = new List<string> { "Pega ele", "Arrebenta", "Mostre para que veio", "Não vacile", "Vamos nessa" };
-    int randomInitialIndex = UnityEngine.Random.Range(0, randomInitialText.Count);
-    yield return dialogBox.TypeDialog($"{randomInitialText[randomInitialIndex]} {newMonster.Base.Name}.");
+    // var randomInitialText = new List<string> { "Pega ele", "Arrebenta", "Mostre para que veio", "Não vacile", "Vamos nessa" };
+    // int randomInitialIndex = UnityEngine.Random.Range(0, randomInitialText.Count);
+    yield return dialogBox.TypeDialog($"{RandomBattleText(true)} {newMonster.Base.Name}.");
+
+    if (prevState == null){
+      state = BattleState.RunningTurn;
+    }else if (prevState == BattleState.AboutToUse){
+      prevState = null;
+      StartCoroutine(SendNextTrainerMonster());
+    }
+  }
+
+  IEnumerator SendNextTrainerMonster(){
+    state = BattleState.Busy;
+
+    var nextMonster = trainerParty.GetHealthyMonster();
+    enemyUnit.Setup(nextMonster);
+    yield return dialogBox.TypeDialog($"{trainer.Name} liberou {nextMonster.Base.Name}!");
 
     state = BattleState.RunningTurn;
+  }
+
+  string RandomBattleText(bool send){
+    var randomTextArray = new List<string>();
+    if(send)
+      randomTextArray = new List<string> { "Pega ele", "Arrebenta", "Mostre para que veio", "Não vacile", "Vamos nessa" };
+    else
+      randomTextArray = new List<string> { "Retorne", "Volte", "Regresse", "Venha", "Já fez o bastante" };
+    
+    // random text on battles
+    int randomInitialIndex = UnityEngine.Random.Range(0, randomTextArray.Count);
+    return randomTextArray[randomInitialIndex];
   }
 }

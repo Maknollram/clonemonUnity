@@ -2,10 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TrainerController : MonoBehaviour {
+public class TrainerController : MonoBehaviour, Interactable {
+  [SerializeField] string name;
+  [SerializeField] Sprite sprite;
   [SerializeField] Dialog dialog;
+  [SerializeField] Dialog dialogAfterBattle;
   [SerializeField] GameObject exclamation;
   [SerializeField] GameObject fov;
+
+  // state
+  bool battleLost = false;
 
   Character character;
 
@@ -15,6 +21,23 @@ public class TrainerController : MonoBehaviour {
 
   private void Start(){
     SetFovRotation(character.Animator.DefaultDirection);
+  }
+
+  private void Update(){
+    character.HandleUpdate();
+  }
+
+  public void Interact(Transform initiator){
+    // trainer look to player and battle if player interact with them
+    character.LookTowards(initiator.position);
+
+    if(!battleLost){
+      StartCoroutine(DialogManager.Instance.ShowDialog(dialog, () => {
+        GameController.Instance.StartTrainerBattle(this);
+      }));
+    }else{
+      StartCoroutine(DialogManager.Instance.ShowDialog(dialogAfterBattle));
+    }
   }
 
   public IEnumerator TriggerTrainerBatte(PlayerController player){
@@ -32,10 +55,16 @@ public class TrainerController : MonoBehaviour {
 
     // show dialog and start battle
     StartCoroutine(DialogManager.Instance.ShowDialog(dialog, () => {
-      Debug.Log("Batalhando freneticamente");
+      GameController.Instance.StartTrainerBattle(this);
     }));
   }
 
+  public void BattleLost(){
+    battleLost = true;
+    fov.gameObject.SetActive(false);
+  }
+
+  // fov = field of view
   public void SetFovRotation(FacingDirection dir){
     float angle = 0f; // facing down as default
     if(dir == FacingDirection.UpRight)
@@ -55,4 +84,8 @@ public class TrainerController : MonoBehaviour {
 
     fov.transform.eulerAngles = new Vector3(0f, 0f, angle);
   }
+
+  public string Name { get => name; }
+
+  public Sprite Sprite { get => sprite; }
 }
