@@ -25,59 +25,37 @@ public class MonsterBase : ScriptableObject {
   [SerializeField] int spDefense;
   [SerializeField] int speed;
 
+  [SerializeField] int catchRate = 255;
+
   [SerializeField] List<LearnableMove> learnableMoves;
 
-  public string Name {
-    get { return name; }
-  }
+  public string Name { get { return name; } }
 
-  public string Description {
-    get { return description; }
-  }
+  public string Description { get { return description; } }
 
-  public Sprite FrontSprite {
-    get { return frontSprite; }
-  }
+  public Sprite FrontSprite { get { return frontSprite; } }
 
-  public Sprite BackSprite {
-    get { return backSprite; }
-  }
+  public Sprite BackSprite { get { return backSprite; } }
 
-  public MonsterType Type1 {
-    get { return type1; }
-  }
+  public MonsterType Type1 { get { return type1; } }
 
-  public MonsterType Type2 {
-    get { return type2; }
-  }
+  public MonsterType Type2 { get { return type2; } }
 
-  public int MaxHp {
-    get { return maxHP; }
-  }
+  public int MaxHp { get { return maxHP; } }
 
-  public int Attack {
-    get { return attack; }
-  }
+  public int Attack { get { return attack; } }
 
-  public int Defense {
-    get { return defense; }
-  }
+  public int Defense { get { return defense; } }
 
-  public int SpAttack {
-    get { return spAttack; }
-  }
+  public int SpAttack { get { return spAttack; } }
 
-  public int SpDefense {
-    get { return spDefense; }
-  }
+  public int SpDefense { get { return spDefense; } }
 
-  public int Speed {
-    get { return speed; }
-  }
+  public int Speed { get { return speed; } }
 
-  public List<LearnableMove> LearnableMoves {
-    get { return learnableMoves; }
-  }
+  public int CatchRate => catchRate;
+
+  public List<LearnableMove> LearnableMoves { get { return learnableMoves; } }
 }
 
 [System.Serializable]
@@ -85,13 +63,9 @@ public class LearnableMove{
   [SerializeField] MoveBase moveBase;
   [SerializeField] int level;
 
-  public MoveBase Base {
-    get { return moveBase; }
-  }
+  public MoveBase Base { get { return moveBase; } }
 
-  public int Level {
-    get { return level; }
-  }
+  public int Level { get { return level; } }
 }
 
 public enum MonsterType{
@@ -151,8 +125,7 @@ public enum Stat{
 }
 
 public class TypeChart{
-  static float [][] chart =
-  {
+  static float [][] chart = { 
     //Has to be same order as PokemonType class
     //                       Nor   Fir   Wat   Ele   Gra   Ice   Fig   Poi   Gro   Fly   Psy   Bug   Roc   Gho   Dra   Dar  Ste    Fai
     // /*Normal*/  new float[] {1f,   1f,   1f,   1f,   1f,   1f,   1f,   1f,   1f,   1f,   1f,   1f,   0.5f, 0,    1f,   1f,   0.5f, 1f},
@@ -192,7 +165,7 @@ public class TypeChart{
     /*voa*/ new float[] { 0.5f,   0.5f,   0f,     1f,     1.5f,   1.5f,   1f,     0f,     0f,     1f,     1.5f,   1f,     0.5f,}
   };
 
-  public static float GetEffectiveness(MonsterType attackType, MonsterType defenseType){
+  public static float GetEffectiveness(MonsterType attackType, MonsterType defenseType){ 
     if (attackType == MonsterType.None || defenseType == MonsterType.None)
       return 1;
 

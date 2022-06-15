@@ -10,6 +10,13 @@ public class Monster {
   [SerializeField] MonsterBase _base;
   [SerializeField] int level;
 
+  public Monster(MonsterBase pBase, int pLevel){
+    _base = pBase;
+    level = pLevel;
+
+    Init();
+  }
+
 	public MonsterBase Base { get { return _base; } }
   public int Level { get{ return level; } }
   public int HP { get; set; }
@@ -27,7 +34,7 @@ public class Monster {
   public int VolatileStatusTime { get; set; }
   public int BleedTime { get; set; }
 
-  public Queue<string> StatusChanges { get; private set; } = new Queue<string>();
+  public Queue<string> StatusChanges { get; private set; }
 
   public bool HpChanged { get; set; }
 
@@ -48,6 +55,7 @@ public class Monster {
 
     HP = MaxHp;
 
+    StatusChanges = new Queue<string>();
     ResetStatBoost();
 
     // if want status ailments to reset

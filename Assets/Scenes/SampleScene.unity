@@ -1311,7 +1311,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: -1692148401
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!1 &66660448
@@ -9421,8 +9421,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 741017947}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.172, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 1}
+  m_LocalPosition: {x: 0, y: 0.484, z: 0}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_Children: []
   m_Father: {fileID: 1528520027}
   m_RootOrder: 1
@@ -9606,7 +9606,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.48315632}
+  m_Offset: {x: 0.004371397, y: -0.6754974}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -9617,7 +9617,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.1, y: 0.6111473}
+  m_Size: {x: 0.17868482, y: 0.9958296}
   m_EdgeRadius: 0
 --- !u!1 &853542316
 GameObject:
@@ -9922,7 +9922,7 @@ SpriteRenderer:
   m_SortingLayerID: -1248074417
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  m_Sprite: {fileID: 21300006, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -9940,8 +9940,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 944743611}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.5, y: 0.8, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 1.15, y: 0.34, z: 0}
+  m_LocalScale: {x: 3, y: 3, z: 1}
   m_Children:
   - {fileID: 519420032}
   m_Father: {fileID: 0}
@@ -9959,45 +9959,45 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkUpSprites:
-  - {fileID: 21300018, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
-  - {fileID: 21300020, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
-  - {fileID: 21300022, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
-  - {fileID: 21300024, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300016, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
+  - {fileID: 21300018, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
+  - {fileID: 21300020, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
+  - {fileID: 21300022, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
   walkDownSprites:
-  - {fileID: 21300000, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
-  - {fileID: 21300002, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
-  - {fileID: 21300004, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
-  - {fileID: 21300006, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300000, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
+  - {fileID: 21300002, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
+  - {fileID: 21300004, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
+  - {fileID: 21300006, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
   walkRightSprites:
-  - {fileID: 21300028, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
-  - {fileID: 21300030, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
-  - {fileID: 21300032, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
-  - {fileID: 21300034, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300024, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
+  - {fileID: 21300026, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
+  - {fileID: 21300028, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
+  - {fileID: 21300030, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
   walkLeftSprites:
-  - {fileID: 21300010, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
-  - {fileID: 21300012, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
-  - {fileID: 21300014, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
-  - {fileID: 21300016, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300008, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
+  - {fileID: 21300010, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
+  - {fileID: 21300012, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
+  - {fileID: 21300014, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
   walkUpRightSprites:
-  - {fileID: 21300046, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
-  - {fileID: 21300048, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
-  - {fileID: 21300050, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
-  - {fileID: 21300052, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300040, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
+  - {fileID: 21300042, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
+  - {fileID: 21300044, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
+  - {fileID: 21300046, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
   walkDownRightSprites:
-  - {fileID: 21300054, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
-  - {fileID: 21300056, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
-  - {fileID: 21300058, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
-  - {fileID: 21300060, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300048, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
+  - {fileID: 21300050, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
+  - {fileID: 21300052, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
+  - {fileID: 21300054, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
   walkUpLeftSprites:
-  - {fileID: 21300064, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
-  - {fileID: 21300066, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
-  - {fileID: 21300068, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
-  - {fileID: 21300070, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300056, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
+  - {fileID: 21300058, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
+  - {fileID: 21300060, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
+  - {fileID: 21300062, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
   walkDownLeftSprites:
-  - {fileID: 21300036, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
-  - {fileID: 21300038, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
-  - {fileID: 21300040, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
-  - {fileID: 21300042, guid: a1d6aff72d6b8264a996d74b904d7717, type: 3}
+  - {fileID: 21300032, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
+  - {fileID: 21300034, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
+  - {fileID: 21300036, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
+  - {fileID: 21300038, guid: ec49beceb9194c54eb67bede3e7bef91, type: 3}
   defaultDirection: 1
 --- !u!114 &944743616
 MonoBehaviour:
@@ -10043,18 +10043,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.021236539, y: 0.078579605}
+  m_Offset: {x: -0.0066444874, y: 0.001971066}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1.3125}
+    oldSize: {x: 0.24, y: 0.34}
     newSize: {x: 1.875, y: 2.25}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.56111073, y: 1.1298747}
+  m_Size: {x: 0.18171743, y: 0.30542397}
   m_EdgeRadius: 0
 --- !u!50 &944743619
 Rigidbody2D:
@@ -11071,29 +11071,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkUpSprites:
-  - {fileID: 21300020, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300046, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300020, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300072, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
+  - {fileID: 21300000, guid: c3ac85bd510627b4097fb2bbc66242b2, type: 3}
+  - {fileID: 21300002, guid: c3ac85bd510627b4097fb2bbc66242b2, type: 3}
+  - {fileID: 21300004, guid: c3ac85bd510627b4097fb2bbc66242b2, type: 3}
   walkDownSprites:
-  - {fileID: 21300070, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300070, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300070, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300070, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
+  - {fileID: 21300006, guid: c3ac85bd510627b4097fb2bbc66242b2, type: 3}
+  - {fileID: 21300008, guid: c3ac85bd510627b4097fb2bbc66242b2, type: 3}
+  - {fileID: 21300010, guid: c3ac85bd510627b4097fb2bbc66242b2, type: 3}
   walkRightSprites:
-  - {fileID: 21300176, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300202, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300176, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300228, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
+  - {fileID: 21300018, guid: c3ac85bd510627b4097fb2bbc66242b2, type: 3}
+  - {fileID: 21300020, guid: c3ac85bd510627b4097fb2bbc66242b2, type: 3}
+  - {fileID: 21300022, guid: c3ac85bd510627b4097fb2bbc66242b2, type: 3}
   walkLeftSprites:
-  - {fileID: 21300098, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300124, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300098, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300150, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  walkUpRightSprites: []
-  walkDownRightSprites: []
-  walkUpLeftSprites: []
-  walkDownLeftSprites: []
+  - {fileID: 21300012, guid: c3ac85bd510627b4097fb2bbc66242b2, type: 3}
+  - {fileID: 21300014, guid: c3ac85bd510627b4097fb2bbc66242b2, type: 3}
+  - {fileID: 21300016, guid: c3ac85bd510627b4097fb2bbc66242b2, type: 3}
+  walkUpRightSprites:
+  - {fileID: 21300000, guid: c3ac85bd510627b4097fb2bbc66242b2, type: 3}
+  walkDownRightSprites:
+  - {fileID: 21300006, guid: c3ac85bd510627b4097fb2bbc66242b2, type: 3}
+  walkUpLeftSprites:
+  - {fileID: 21300000, guid: c3ac85bd510627b4097fb2bbc66242b2, type: 3}
+  walkDownLeftSprites:
+  - {fileID: 21300006, guid: c3ac85bd510627b4097fb2bbc66242b2, type: 3}
   defaultDirection: 1
 --- !u!114 &1339432583
 MonoBehaviour:
@@ -11120,7 +11120,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialog:
     lines:
-    - "J\xE1 tentou andar na grama?"
+    - "Ol\xE1, eu sou Sada! J\xE1 tentou andar na grama?"
     - "Pode se surpreender com o que ir\xE1 encontrar."
     - "Na pr\xF3xima vers\xE3o do jogo lhe ensino a capturar os monstros."
   movementPattern: []
@@ -11141,7 +11141,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.35, y: 0.35}
+    oldSize: {x: 0.36, y: 0.58}
     newSize: {x: 0.35, y: 0.35}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -11205,7 +11205,7 @@ SpriteRenderer:
   m_SortingLayerID: -1248074417
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300070, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
+  m_Sprite: {fileID: 21300006, guid: c3ac85bd510627b4097fb2bbc66242b2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -11223,8 +11223,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1339432581}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.5, y: 0.8, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 1}
+  m_LocalPosition: {x: 3.5, y: 0.6, z: 0}
+  m_LocalScale: {x: 2.5, y: 2.5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
@@ -11551,17 +11551,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkUpSprites:
-  - {fileID: 21300016, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
+  - {fileID: 21300000, guid: 6c82c7245aebd784dbcded176e1057b0, type: 3}
+  - {fileID: 21300002, guid: 6c82c7245aebd784dbcded176e1057b0, type: 3}
+  - {fileID: 21300004, guid: 6c82c7245aebd784dbcded176e1057b0, type: 3}
   walkDownSprites:
-  - {fileID: 21300014, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
+  - {fileID: 21300006, guid: 6c82c7245aebd784dbcded176e1057b0, type: 3}
+  - {fileID: 21300008, guid: 6c82c7245aebd784dbcded176e1057b0, type: 3}
+  - {fileID: 21300010, guid: 6c82c7245aebd784dbcded176e1057b0, type: 3}
   walkRightSprites:
-  - {fileID: 21300248, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300274, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300300, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
+  - {fileID: 21300012, guid: 6c82c7245aebd784dbcded176e1057b0, type: 3}
+  - {fileID: 21300014, guid: 6c82c7245aebd784dbcded176e1057b0, type: 3}
+  - {fileID: 21300016, guid: 6c82c7245aebd784dbcded176e1057b0, type: 3}
   walkLeftSprites:
-  - {fileID: 21300170, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300196, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
-  - {fileID: 21300222, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
+  - {fileID: 21300018, guid: 6c82c7245aebd784dbcded176e1057b0, type: 3}
+  - {fileID: 21300020, guid: 6c82c7245aebd784dbcded176e1057b0, type: 3}
+  - {fileID: 21300022, guid: 6c82c7245aebd784dbcded176e1057b0, type: 3}
   walkUpRightSprites:
   - {fileID: 21300000, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
   walkDownRightSprites:
@@ -11599,7 +11603,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.35, y: 0.35}
+    oldSize: {x: 0.43, y: 0.63}
     newSize: {x: 0.35, y: 0.35}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -11663,7 +11667,7 @@ SpriteRenderer:
   m_SortingLayerID: -1248074417
   m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300014, guid: 47d409e5988a8f84c916e23ddeddf060, type: 3}
+  m_Sprite: {fileID: 21300006, guid: 6c82c7245aebd784dbcded176e1057b0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -11681,8 +11685,8 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1528520021}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.5, y: 1.8, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 1}
+  m_LocalPosition: {x: 7.5, y: 0.8, z: 0}
+  m_LocalScale: {x: 2.5, y: 2.5, z: 1}
   m_Children:
   - {fileID: 819991027}
   - {fileID: 741017949}
@@ -11700,11 +11704,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a651bccee60df23449684fa3c7cbf15d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  name: Treinador novato
-  sprite: {fileID: 21300002, guid: 1561222cf0cb3b141a036254e990e3ea, type: 3}
+  name: Nessa
+  sprite: {fileID: 21300000, guid: bde4c030a19ba07488232a386d4d291a, type: 3}
   dialog:
     lines:
-    - Vamos treinar em uma batalha.
+    - Eu Nessa lhe desafio para uma batalha.
   dialogAfterBattle:
     lines:
     - "N\xE3o acredito que me ganhou!"
@@ -11725,7 +11729,7 @@ MonoBehaviour:
   - _base: {fileID: 11400000, guid: 96ac8a6408919cd40a8d307f5ce6e64e, type: 2}
     level: 1
   - _base: {fileID: 11400000, guid: 5d31c1736bb673b44b0be73734abb56b, type: 2}
-    level: 6
+    level: 3
 --- !u!1001 &1618935440
 Prefab:
   m_ObjectHideFlags: 0
@@ -12081,13 +12085,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wildMonsters:
   - _base: {fileID: 11400000, guid: 5d31c1736bb673b44b0be73734abb56b, type: 2}
-    level: 10
+    level: 3
   - _base: {fileID: 11400000, guid: 96ac8a6408919cd40a8d307f5ce6e64e, type: 2}
-    level: 10
+    level: 3
   - _base: {fileID: 11400000, guid: 356ddc9b47bf6064b9b2c2a4f1c976fa, type: 2}
-    level: 10
+    level: 4
   - _base: {fileID: 11400000, guid: e832f450f031b5b439623ed9a57d5ce2, type: 2}
-    level: 10
+    level: 4
 --- !u!1001 &1705818283
 Prefab:
   m_ObjectHideFlags: 0
@@ -13568,6 +13572,8 @@ MonoBehaviour:
   partyScreen: {fileID: 7770594}
   playerImage: {fileID: 2118509060}
   trainerImage: {fileID: 1025493034}
+  monsterballSprite: {fileID: 1486657307771534, guid: 4bc41f24c3fd2e14e92e18560d5a5e8b,
+    type: 2}
 --- !u!1 &2145497677
 GameObject:
   m_ObjectHideFlags: 0

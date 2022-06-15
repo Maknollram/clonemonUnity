@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public enum BattleState { Start, ActionSelection, MoveSelection, RunningTurn, Busy, PartyScreen, AboutToUse, BattleOver}
 
@@ -32,6 +33,7 @@ public class BattleSystem : MonoBehaviour {
   [SerializeField] PartyScreen partyScreen;
   [SerializeField] Image playerImage;
   [SerializeField] Image trainerImage;
+  [SerializeField] GameObject monsterballSprite;
 
   public event Action<bool> OnBattleOver;
 
@@ -54,6 +56,8 @@ public class BattleSystem : MonoBehaviour {
   public void StartBattle(MonsterParty playerParty, Monster wildMonster){
     this.playerParty = playerParty;
     this.wildMonster = wildMonster;
+    player = playerParty.GetComponent<PlayerController>();
+
     StartCoroutine(SetupBattle());
   }
 
@@ -187,6 +191,9 @@ public class BattleSystem : MonoBehaviour {
         var selectedMonster = playerParty.Monsters[currentMember];
         state = BattleState.Busy;
         yield return SwitchMonster(selectedMonster);
+      } else if (playerAction == BattleAction.UseItem){
+        dialogBox.EnableActionSelector(false);
+        yield return ThrowMonsterball();
       }
 
       // enemy turn
@@ -389,6 +396,10 @@ public class BattleSystem : MonoBehaviour {
     }else if (state == BattleState.AboutToUse){
       HandleAboutToUse();
     }
+
+    // send monsterball with a button
+    if(Input.GetKeyDown(joystick1 + SQUARE) || Input.GetKeyDown(KeyCode.Keypad1))
+      StartCoroutine(RunTurns(BattleAction.UseItem));
   }
 
   void HandleActionSelection(){
@@ -422,7 +433,7 @@ public class BattleSystem : MonoBehaviour {
           MoveSelection();
         }else if(currentAction == 1){
           // Slap an item
-
+          StartCoroutine(RunTurns(BattleAction.UseItem));
         }else if(currentAction == 2){
           // Take your monster comrade
           prevState = state;
@@ -575,6 +586,83 @@ public class BattleSystem : MonoBehaviour {
     yield return dialogBox.TypeDialog($"{trainer.Name} liberou {nextMonster.Base.Name}!");
 
     state = BattleState.RunningTurn;
+  }
+
+  IEnumerator ThrowMonsterball(){
+    state = BattleState.Busy;
+
+    if(isTrainerBattle){
+      yield return dialogBox.TypeDialog($"Monstros de outros colecionadores não podem se juntar à sua coleção!");
+      state = BattleState.RunningTurn;
+      yield break;
+    }
+
+    var monsterballObj = Instantiate(monsterballSprite, playerUnit.transform.position - new Vector3(2,0), Quaternion.identity);
+
+    yield return dialogBox.TypeDialog($"{player.Name} lançou um capturador de monstro!");
+    var monsterball = monsterballObj.GetComponent<SpriteRenderer>();
+
+    // animations
+    yield return monsterball.transform.DOJump(enemyUnit.transform.position + new Vector3(0,2), 2f, 1, 1f).WaitForCompletion();
+    yield return enemyUnit.PlayCaptureAnimation();
+    yield return monsterball.transform.DOMoveY(enemyUnit.transform.position.y -1.3f, 0.5f).WaitForCompletion();
+
+    int shakeCount = TryToCatchMonster(enemyUnit.Monster);
+
+    // shake monsterball 3 times
+    for (int i = 0; i < Mathf.Min(shakeCount, 3); ++i)
+    {
+      yield return new WaitForSeconds(0.5f);
+      // like original
+      // yield return monsterball.transform.DOPunchRotation(new Vector3(0, 0, 10f), 0.8f).WaitForCompletion();
+      yield return monsterball.transform.DOScale(new Vector3(1.5f, 1.5f, 1f), 0.5f);
+      yield return monsterball.transform.DOScale(new Vector3(1f, 1f, 1f), 0.5f);
+    }
+
+    if(shakeCount == 4){
+      // monster caught
+      yield return dialogBox.TypeDialog($"{enemyUnit.Monster.Base.Name} foi armazenado com sucesso!");
+      yield return monsterball.DOFade(0, 1.5f).WaitForCompletion();
+
+      playerParty.AddMonster(enemyUnit.Monster);
+      yield return dialogBox.TypeDialog($"{enemyUnit.Monster.Base.Name} se juntou ao seu grupo!");
+
+      Destroy(monsterball);
+      BattleOver(true);
+    }else{
+      // monster released
+      yield return new WaitForSeconds(1f);
+      monsterball.DOFade(0, 0.2f);
+      yield return enemyUnit.PlayBreakOutAnimation();
+
+      if (shakeCount < 2)
+        yield return dialogBox.TypeDialog($"{enemyUnit.Monster.Base.Name} se soltou!");
+      else
+        yield return dialogBox.TypeDialog($"{enemyUnit.Monster.Base.Name} por pouco não foi armazenado!");
+
+      Destroy(monsterball);
+      state = BattleState.RunningTurn;
+    }
+  }
+
+  int TryToCatchMonster(Monster monster){
+    // calculation based on original formulas gen 3/4
+    float a = (3 * monster.MaxHp - 2 * monster.HP) * monster.Base.CatchRate * ConditionsDB.GetStatusBonus(monster.Status) / (3 * monster.MaxHp);
+
+    if (a >= 255)
+      return 4;
+
+    float b = 1048560 / Mathf.Sqrt(Mathf.Sqrt(16711680 / a));
+
+    int shakeCount = 0;
+    while (shakeCount < 4){
+      if(UnityEngine.Random.Range(0, 65535) >= b)
+        break;
+
+      ++shakeCount;
+    }
+
+    return shakeCount;
   }
 
   string RandomBattleText(bool send){
