@@ -53,6 +53,8 @@ public class BattleSystem : MonoBehaviour {
   PlayerController player;
   TrainerController trainer;
 
+  int escapeAttempts;
+
   public void StartBattle(MonsterParty playerParty, Monster wildMonster){
     this.playerParty = playerParty;
     this.wildMonster = wildMonster;
@@ -113,6 +115,8 @@ public class BattleSystem : MonoBehaviour {
       yield return dialogBox.TypeDialog($"{RandomBattleText(true)} {playerMonster.Base.Name}");
       dialogBox.SetMoveNames(playerUnit.Monster.Moves);
     }
+
+    escapeAttempts = 0;
 
     partyScreen.Init();
 
@@ -194,6 +198,8 @@ public class BattleSystem : MonoBehaviour {
       } else if (playerAction == BattleAction.UseItem){
         dialogBox.EnableActionSelector(false);
         yield return ThrowMonsterball();
+      } else if (playerAction == BattleAction.Run){
+        yield return TryToEScape();
       }
 
       // enemy turn
@@ -403,7 +409,7 @@ public class BattleSystem : MonoBehaviour {
   }
 
   void HandleActionSelection(){
-    // somente cima/baixo
+    // only up / down
     // if (Input.GetKeyDown(joystick1 + DOWN) || Input.GetKeyDown(KeyCode.DownArrow))
     // {
     //   if(currentAction < 1)
@@ -440,7 +446,7 @@ public class BattleSystem : MonoBehaviour {
           OpenPartyScreen();
         }else if(currentAction == 3){
           // Run like a crazy bitch MAN
-
+           StartCoroutine(RunTurns(BattleAction.Run));
         }
     }
   }
@@ -663,6 +669,38 @@ public class BattleSystem : MonoBehaviour {
     }
 
     return shakeCount;
+  }
+
+  IEnumerator TryToEScape(){
+    state = BattleState.Busy;
+
+    if(isTrainerBattle){
+      yield return dialogBox.TypeDialog($"Não pode fugir de batalhas contra outros colecionadores!");
+      state = BattleState.RunningTurn;
+      yield break;
+    }
+
+    ++ escapeAttempts;
+
+    int playerSpeed = playerUnit.Monster.Speed;
+    int enemySpeed = enemyUnit.Monster.Speed;
+
+    if(enemySpeed < playerSpeed){
+      yield return dialogBox.TypeDialog($"Corre Forest! Corre!");
+      BattleOver(true);
+    }else{
+      // calculation based on original formulas gen 3/4
+      float f = (playerSpeed * 128) /enemySpeed + 30 * escapeAttempts;
+      f = f % 256;
+
+      if(UnityEngine.Random.Range(0, 256) < f){
+        yield return dialogBox.TypeDialog($"De tanto tentar conseguiu fugir!");
+        BattleOver(true);
+      }else{
+        yield return dialogBox.TypeDialog($"Muito lento!");
+        state = BattleState.RunningTurn;
+      }
+    }
   }
 
   string RandomBattleText(bool send){
