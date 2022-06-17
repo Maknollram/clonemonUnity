@@ -20,6 +20,7 @@ public class Monster {
 	public MonsterBase Base { get { return _base; } }
   public int Level { get{ return level; } }
   public int HP { get; set; }
+  public int Exp { get; set; }
 
   public List<Move> Moves { get; set; }
 
@@ -50,6 +51,8 @@ public class Monster {
         if (Moves.Count >= 4)
           break;
     }
+
+    Exp = Base.GetExpForLevel(Level);
 
     CalculateStats();
 
@@ -108,12 +111,21 @@ public class Monster {
         var boost = statBoost.boost;
         StatBoosts[stat] = Mathf.Clamp(StatBoosts[stat] + boost, -3, 3); // numbers indicate max negative and positive boosts like 'var boostValues = new float[] { 1f, 1.5f, 2f, 2.5f }' max values - 1, in the move put -1 or +1 to decrease or increase respectively
 
-        // .DisplayName() precisa usar o Acme.Utils lá emcima e no enum tem que ter description, exemplo na class MonsterBase
+        // .DisplayName() precisa importar o Acme.Utils e no enum tem que ter description, exemplo na class MonsterBase
         if (boost > 0)
           StatusChanges.Enqueue($"{stat.DisplayName()} de {Base.Name} aumentou!");
         else
           StatusChanges.Enqueue($"{stat.DisplayName()} de {Base.Name} diminuiu!");
     }
+  }
+
+  public bool CheckForLevelUp(){
+    if(Exp > Base.GetExpForLevel(level+1)){
+      ++level;
+      return true;
+    }
+
+    return false;
   }
 
   // Para "aportuguesar" a parada

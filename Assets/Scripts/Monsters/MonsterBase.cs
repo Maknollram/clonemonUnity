@@ -25,9 +25,21 @@ public class MonsterBase : ScriptableObject {
   [SerializeField] int spDefense;
   [SerializeField] int speed;
 
+  [SerializeField] int expYield;
+  [SerializeField] GrowthRate growthRate;
+
   [SerializeField] int catchRate = 255;
 
   [SerializeField] List<LearnableMove> learnableMoves;
+
+  public int GetExpForLevel(int level){
+    if(growthRate == GrowthRate.Fast)
+      return 4 * (level * level * level) / 5;
+    else if(growthRate == GrowthRate.MediumFast)
+      return level * level * level;
+      
+    return -1;
+  }
 
   public string Name { get { return name; } }
 
@@ -54,6 +66,10 @@ public class MonsterBase : ScriptableObject {
   public int Speed { get { return speed; } }
 
   public int CatchRate => catchRate;
+
+  public int ExpYield => expYield;
+
+  public GrowthRate GrowthRate => growthRate;
 
   public List<LearnableMove> LearnableMoves { get { return learnableMoves; } }
 }
@@ -103,6 +119,10 @@ public enum MonsterType{
   Planta,
   Terra,/*pedra*/
   Voador
+}
+
+public enum GrowthRate{
+  Fast, MediumFast
 }
 
 // Description precisa usar System.ComponentModel e eh usado no .DisplayName(), exemplo na class Monster

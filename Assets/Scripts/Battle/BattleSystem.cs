@@ -59,6 +59,7 @@ public class BattleSystem : MonoBehaviour {
     this.playerParty = playerParty;
     this.wildMonster = wildMonster;
     player = playerParty.GetComponent<PlayerController>();
+    isTrainerBattle = false;
 
     StartCoroutine(SetupBattle());
   }
@@ -254,15 +255,10 @@ public class BattleSystem : MonoBehaviour {
       }
 
       if (targetUnit.Monster.HP <= 0){
-        yield return dialogBox.TypeDialog($"{ targetUnit.Monster.Base.Name} morreu!");
-        targetUnit.PlayFaintAnimation();
-        sourceUnit.PlayVictoryAnimation();
-        yield return new WaitForSeconds(2f);
-        
-        CheckForBattleOver(targetUnit);
+        yield return HandleMonsterFainted(targetUnit, sourceUnit);
       }
     }else{
-      yield return dialogBox.TypeDialog($"{ sourceUnit.Monster.Base.Name} errou o alvo!");
+      yield return dialogBox.TypeDialog($"{sourceUnit.Monster.Base.Name} errou o alvo!");
     }
   }
 
@@ -316,12 +312,7 @@ public class BattleSystem : MonoBehaviour {
     yield return sourceUnit.Hud.UpdateHP();
 
     if (sourceUnit.Monster.HP <= 0){
-      yield return dialogBox.TypeDialog($"{ sourceUnit.Monster.Base.Name} morreu!");
-      sourceUnit.PlayFaintAnimation();
-      targetUnit.PlayVictoryAnimation();
-      yield return new WaitForSeconds(2f);
-      
-      CheckForBattleOver(sourceUnit);
+      yield return HandleMonsterFainted(sourceUnit, targetUnit);
       yield return new WaitUntil(() => state == BattleState.RunningTurn);
     }
   }
@@ -355,6 +346,38 @@ public class BattleSystem : MonoBehaviour {
       var message = monster.StatusChanges.Dequeue();
       yield return dialogBox.TypeDialog(message);
     }
+  }
+
+  IEnumerator HandleMonsterFainted(BattleUnit faintedUnit, BattleUnit anotherUnit){
+    yield return dialogBox.TypeDialog($"{faintedUnit.Monster.Base.Name} morreu!");
+    faintedUnit.PlayFaintAnimation();
+    anotherUnit.PlayVictoryAnimation();
+    yield return new WaitForSeconds(2f);
+
+    if(!faintedUnit.IsPlayerUnit){
+      // exp gain
+      int expYield = faintedUnit.Monster.Base.ExpYield;
+      int enemyLevel = faintedUnit.Monster.Level;
+      float trainerBonus = (isTrainerBattle) ? 1.5f : 1f;
+
+      int expGain = Mathf.FloorToInt((expYield * enemyLevel * trainerBonus) / 7);
+      playerUnit.Monster.Exp += expGain;
+
+      yield return dialogBox.TypeDialog($"{playerUnit.Monster.Base.Name} ganhou {expGain} de experiência.");
+      yield return playerUnit.Hud.SetExpSmooth();
+
+      // verify lvUp
+      while(playerUnit.Monster.CheckForLevelUp()){
+        playerUnit.Hud.SetLevel();
+        yield return dialogBox.TypeDialog($"{playerUnit.Monster.Base.Name} subiu de nível para {playerUnit.Monster.Level}.");
+
+        yield return playerUnit.Hud.SetExpSmooth(true);
+      }
+
+      yield return new WaitForSeconds(1f);
+    }
+    
+    CheckForBattleOver(faintedUnit);
   }
 
   void CheckForBattleOver(BattleUnit faintedUnit){
