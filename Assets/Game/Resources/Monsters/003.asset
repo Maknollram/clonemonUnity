@@ -19,11 +19,11 @@ MonoBehaviour:
   type2: 0
   maxHP: 41
   attack: 49
-  defense: 60
+  defense: 40
   spAttack: 45
   spDefense: 35
   speed: 50
-  expYield: 300
+  expYield: 500
   growthRate: 1
   catchRate: 255
   learnableMoves:

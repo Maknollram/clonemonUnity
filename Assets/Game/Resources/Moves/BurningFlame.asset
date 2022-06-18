@@ -14,10 +14,11 @@ MonoBehaviour:
   name: Chama Ardente
   description: Bafo de fogo que queima qualquer inimigo.
   type: 4
-  power: 20
+  power: 40
   accuracy: 100
   alwaysHits: 0
   sp: 20
+  priority: 0
   category: 0
   effects:
     boosts: []

@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System.Linq;
 
-public enum BattleState { Start, ActionSelection, MoveSelection, RunningTurn, Busy, PartyScreen, AboutToUse, BattleOver}
+public enum BattleState { Start, ActionSelection, MoveSelection, RunningTurn, Busy, PartyScreen, AboutToUse, MoveToForget, BattleOver}
 
 public enum BattleAction { Move, SwitchMonster, UseItem, Run }
 
@@ -34,6 +35,7 @@ public class BattleSystem : MonoBehaviour {
   [SerializeField] Image playerImage;
   [SerializeField] Image trainerImage;
   [SerializeField] GameObject monsterballSprite;
+  [SerializeField] MoveSelectionUI moveSelectionUI;
 
   public event Action<bool> OnBattleOver;
 
@@ -54,6 +56,7 @@ public class BattleSystem : MonoBehaviour {
   TrainerController trainer;
 
   int escapeAttempts;
+  MoveBase moveToLearn;
 
   public void StartBattle(MonsterParty playerParty, Monster wildMonster){
     this.playerParty = playerParty;
@@ -155,6 +158,16 @@ public class BattleSystem : MonoBehaviour {
 
     state = BattleState.AboutToUse;
     dialogBox.EnableChoiceBox(true);
+  }
+
+  IEnumerator ChooseMoveToForget(Monster monster, MoveBase newMove){
+    state = BattleState.Busy;
+    yield return dialogBox.TypeDialog($"Escolha um movimento a ser perdido.");
+    moveSelectionUI.gameObject.SetActive(true);
+    moveSelectionUI.SetMoveData(monster.Moves.Select(x => x.Base).ToList(), newMove);
+    moveToLearn = newMove;
+
+    state = BattleState.MoveToForget;
   }
 
   IEnumerator RunTurns(BattleAction playerAction){
@@ -371,6 +384,26 @@ public class BattleSystem : MonoBehaviour {
         playerUnit.Hud.SetLevel();
         yield return dialogBox.TypeDialog($"{playerUnit.Monster.Base.Name} subiu de nível para {playerUnit.Monster.Level}.");
 
+        // learning new moves
+        var newMove = playerUnit.Monster.GetLearnableMoveAtCurrLevel();
+
+        if(newMove != null){
+          if(playerUnit.Monster.Moves.Count < MonsterBase.MaxNumOfMoves){
+            // if have slot to learn
+            playerUnit.Monster.LearnMove(newMove);
+            yield return dialogBox.TypeDialog($"{playerUnit.Monster.Base.Name} aprendeu {newMove.Base.Name}.");
+            dialogBox.SetMoveNames(playerUnit.Monster.Moves);
+          }else{
+            // if have to forget a move to learn new one
+            yield return dialogBox.TypeDialog($"{playerUnit.Monster.Base.Name} aprenderá {newMove.Base.Name}.");
+            yield return dialogBox.TypeDialog($"Somente se perder algum movimento dos {MonsterBase.MaxNumOfMoves} que já possui.");
+            yield return ChooseMoveToForget(playerUnit.Monster, newMove.Base);
+
+            yield return new WaitUntil(() => state != BattleState.MoveToForget);
+            yield return new WaitForSeconds(2f);
+          }
+        }
+
         yield return playerUnit.Hud.SetExpSmooth(true);
       }
 
@@ -424,6 +457,27 @@ public class BattleSystem : MonoBehaviour {
       HandlePartySelection();
     }else if (state == BattleState.AboutToUse){
       HandleAboutToUse();
+    }else if (state == BattleState.MoveToForget){
+      Action<int> onMoveSelected = (moveIndex) =>{
+        moveSelectionUI.gameObject.SetActive(false);
+
+        if(moveIndex == MonsterBase.MaxNumOfMoves){
+          // Don't lerned the new move
+          StartCoroutine(dialogBox.TypeDialog($"{playerUnit.Monster.Base.Name} não perdeu nenhum movimento!"));
+        }else{
+          // forget the move selected and lerned a new one
+          var selectedMove = playerUnit.Monster.Moves[moveIndex].Base;
+          StartCoroutine(dialogBox.TypeDialog($"{playerUnit.Monster.Base.Name} perdeu {selectedMove.Name} e aprendeu {moveToLearn.Name}!"));
+
+          playerUnit.Monster.Moves[moveIndex] = new Move(moveToLearn);
+        }
+
+        moveToLearn = null;
+
+        state = BattleState.RunningTurn;
+      };
+
+      moveSelectionUI.HandleMoveSelection(onMoveSelected);
     }
 
     // send monsterball with a button

@@ -48,7 +48,7 @@ public class Monster {
         if (move.Level <= Level)
           Moves.Add(new Move(move.Base));
 
-        if (Moves.Count >= 4)
+        if (Moves.Count >= MonsterBase.MaxNumOfMoves)
           break;
     }
 
@@ -126,6 +126,17 @@ public class Monster {
     }
 
     return false;
+  }
+
+  public LearnableMove GetLearnableMoveAtCurrLevel(){
+    return Base.LearnableMoves.Where(x => x.Level == level).FirstOrDefault();
+  }
+
+  public void LearnMove(LearnableMove moveToLearn){
+    if(Moves.Count > MonsterBase.MaxNumOfMoves)
+      return;
+
+    Moves.Add(new Move(moveToLearn.Base));
   }
 
   // Para "aportuguesar" a parada
