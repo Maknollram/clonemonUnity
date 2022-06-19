@@ -7,7 +7,8 @@ public enum GameState
   FreeRoam,
   Battle,
   Dialog,
-  Cutscene
+  Cutscene,
+  Paused
 }
 
 public class GameController : MonoBehaviour {
@@ -16,6 +17,7 @@ public class GameController : MonoBehaviour {
   [SerializeField] Camera worldCamera;
 
   GameState state;
+  GameState stateBeforePause;
 
   public static GameController Instance { get; private set; }
 
@@ -25,16 +27,7 @@ public class GameController : MonoBehaviour {
   }
 
   private void Start(){
-    playerController.OnEncountered += StartBattle;
     battleSystem.OnBattleOver += EndBattle;
-
-    playerController.OnEnterTrainersView += (Collider2D trainerCollider) => {
-      var trainer = trainerCollider.GetComponentInParent<TrainerController>();
-      if(trainer != null){
-        state = GameState.Cutscene;
-        StartCoroutine(trainer.TriggerTrainerBatte(playerController));
-      }
-    };
 
     DialogManager.Instance.OnShowDialog += () => {
       state = GameState.Dialog;
@@ -46,7 +39,15 @@ public class GameController : MonoBehaviour {
     };
   }
 
-  void StartBattle(){
+  public void PauseGame(bool pause){
+    if(pause){
+      stateBeforePause = state;
+      state = GameState.Paused;
+    }else
+      state = stateBeforePause;
+  }
+
+  public void StartBattle(){
     state = GameState.Battle;
     battleSystem.gameObject.SetActive(true);
     worldCamera.gameObject.SetActive(false);
@@ -71,6 +72,11 @@ public class GameController : MonoBehaviour {
     var trainerParty = trainer.GetComponent<MonsterParty>();
 
     battleSystem.StartTrainerBattle(playerParty, trainerParty);
+  }
+
+  public void OnEnterTrainersView(TrainerController trainer){
+    state = GameState.Cutscene;
+    StartCoroutine(trainer.TriggerTrainerBatte(playerController));
   }
 
   void EndBattle(bool won){
