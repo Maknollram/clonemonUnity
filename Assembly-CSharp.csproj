@@ -69,6 +69,7 @@
      <Compile Include="Assets\Scripts\Character\TrainerFov.cs" />
      <Compile Include="Assets\Scripts\Core\EssentialObjects.cs" />
      <Compile Include="Assets\Scripts\Core\EssentialObjectsSpawner.cs" />
+     <Compile Include="Assets\Scripts\Core\Fader.cs" />
      <Compile Include="Assets\Scripts\Data\ConditionsDB.cs" />
      <Compile Include="Assets\Scripts\GameController.cs" />
      <Compile Include="Assets\Scripts\Gameplay\Dialog.cs" />
@@ -85,6 +86,7 @@
      <Compile Include="Assets\Scripts\Monsters\Move.cs" />
      <Compile Include="Assets\Scripts\Monsters\MoveBase.cs" />
      <Compile Include="Assets\Scripts\SceneManagement\Portal.cs" />
+     <Compile Include="Assets\Scripts\SceneManagement\SceneDetails.cs" />
      <Compile Include="Assets\Scripts\Util\EnumExtensions.cs" />
      <Compile Include="Assets\Scripts\Util\SpriteAnimator.cs" />
      <None Include="Assets\Art\gameArt\livearea\contents\template.xml" />
