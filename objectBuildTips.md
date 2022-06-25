@@ -11,3 +11,4 @@
 * Add novas scenes criadas pelo comando open scene additive, remova os portais caso tenham, ou crie novas scenes e add pelo comando open scene additive, add a nova scene no build settings do projeto
 * Coloque o mesmo nome da scene criada ou movida e adicione BoxCollider2D e o ajeite do tamanho da scene
 * Defina em ConnectScenes quais scenes serão carregadas junto com a que o player estiver
+* add o script map area e defina os monstros se na scene tiver batalha contra monstros selvagens

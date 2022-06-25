@@ -125,6 +125,25 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 1482869996}
   m_Script: {fileID: 11500000, guid: 3499eb6aa7c33a246a787b0f290a4a78, type: 3}
+--- !u!1 &805096321 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1135195844843916, guid: 1cba6a34c5b83c34b830aada27d774a7,
+    type: 2}
+  m_PrefabInternal: {fileID: 931843515}
+--- !u!114 &805096322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 805096321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62305c9e1e5f5b341ad289b121871947, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wildMonsters:
+  - _base: {fileID: 11400000, guid: 96ac8a6408919cd40a8d307f5ce6e64e, type: 2}
+    level: 6
 --- !u!1001 &931843515
 Prefab:
   m_ObjectHideFlags: 0
@@ -263,6 +282,25 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1cba6a34c5b83c34b830aada27d774a7, type: 2}
   m_IsPrefabAsset: 0
+--- !u!1 &1048403980 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1135195844843916, guid: 1cba6a34c5b83c34b830aada27d774a7,
+    type: 2}
+  m_PrefabInternal: {fileID: 1482869996}
+--- !u!114 &1048403981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1048403980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62305c9e1e5f5b341ad289b121871947, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wildMonsters:
+  - _base: {fileID: 11400000, guid: 96ac8a6408919cd40a8d307f5ce6e64e, type: 2}
+    level: 3
 --- !u!1001 &1254646721
 Prefab:
   m_ObjectHideFlags: 0
@@ -315,7 +353,7 @@ Prefab:
     - target: {fileID: 114624228061946986, guid: 1cba6a34c5b83c34b830aada27d774a7,
         type: 2}
       propertyPath: connecctedScenes.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4778241231649230, guid: 1cba6a34c5b83c34b830aada27d774a7, type: 2}
       propertyPath: m_LocalPosition.x
@@ -358,6 +396,102 @@ Prefab:
       propertyPath: connecctedScenes.Array.data[0]
       value: 
       objectReference: {fileID: 569954840}
+    - target: {fileID: 114624228061946986, guid: 1cba6a34c5b83c34b830aada27d774a7,
+        type: 2}
+      propertyPath: connecctedScenes.Array.data[1]
+      value: 
+      objectReference: {fileID: 1987262904}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1cba6a34c5b83c34b830aada27d774a7, type: 2}
   m_IsPrefabAsset: 0
+--- !u!1 &1933427897 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1135195844843916, guid: 1cba6a34c5b83c34b830aada27d774a7,
+    type: 2}
+  m_PrefabInternal: {fileID: 994251484}
+--- !u!114 &1933427898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1933427897}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62305c9e1e5f5b341ad289b121871947, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wildMonsters:
+  - _base: {fileID: 11400000, guid: 96ac8a6408919cd40a8d307f5ce6e64e, type: 2}
+    level: 4
+--- !u!1001 &1987262903
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 114624228061946986, guid: 1cba6a34c5b83c34b830aada27d774a7,
+        type: 2}
+      propertyPath: connecctedScenes.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4778241231649230, guid: 1cba6a34c5b83c34b830aada27d774a7, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -47.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4778241231649230, guid: 1cba6a34c5b83c34b830aada27d774a7, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4778241231649230, guid: 1cba6a34c5b83c34b830aada27d774a7, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4778241231649230, guid: 1cba6a34c5b83c34b830aada27d774a7, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4778241231649230, guid: 1cba6a34c5b83c34b830aada27d774a7, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4778241231649230, guid: 1cba6a34c5b83c34b830aada27d774a7, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4778241231649230, guid: 1cba6a34c5b83c34b830aada27d774a7, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4778241231649230, guid: 1cba6a34c5b83c34b830aada27d774a7, type: 2}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1135195844843916, guid: 1cba6a34c5b83c34b830aada27d774a7, type: 2}
+      propertyPath: m_Name
+      value: HomeTownHouse1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114624228061946986, guid: 1cba6a34c5b83c34b830aada27d774a7,
+        type: 2}
+      propertyPath: connecctedScenes.Array.data[0]
+      value: 
+      objectReference: {fileID: 708827086}
+    - target: {fileID: 61001176271302838, guid: 1cba6a34c5b83c34b830aada27d774a7,
+        type: 2}
+      propertyPath: m_Size.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 61001176271302838, guid: 1cba6a34c5b83c34b830aada27d774a7,
+        type: 2}
+      propertyPath: m_Size.y
+      value: 15
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1cba6a34c5b83c34b830aada27d774a7, type: 2}
+  m_IsPrefabAsset: 0
+--- !u!114 &1987262904 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114624228061946986, guid: 1cba6a34c5b83c34b830aada27d774a7,
+    type: 2}
+  m_PrefabInternal: {fileID: 1987262903}
+  m_Script: {fileID: 11500000, guid: 3499eb6aa7c33a246a787b0f290a4a78, type: 3}

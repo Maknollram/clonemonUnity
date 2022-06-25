@@ -14,7 +14,10 @@ public class Portal : MonoBehaviour, IPlayerTriggerable {
   Fader fader;
 
   public void onPlayerTriggered(PlayerController player){
+    player.Character.Animator.IsMoving = false;
+
     this.player = player;
+    
     StartCoroutine(SwitchScene());
   }
 

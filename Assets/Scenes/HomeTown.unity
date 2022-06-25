@@ -2314,66 +2314,52 @@ TilemapCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 1
   m_Offset: {x: 0, y: 0}
---- !u!1001 &62303260
+--- !u!1001 &55744205
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4799288518204592, guid: 4124e70ef05a4054fbce3fa286fce1ff, type: 2}
+    - target: {fileID: 4799288518204592, guid: 387016dec2bfff24b9c2a757edc2f4e5, type: 2}
       propertyPath: m_LocalPosition.x
       value: -3.5
       objectReference: {fileID: 0}
-    - target: {fileID: 4799288518204592, guid: 4124e70ef05a4054fbce3fa286fce1ff, type: 2}
+    - target: {fileID: 4799288518204592, guid: 387016dec2bfff24b9c2a757edc2f4e5, type: 2}
       propertyPath: m_LocalPosition.y
       value: 2.8
       objectReference: {fileID: 0}
-    - target: {fileID: 4799288518204592, guid: 4124e70ef05a4054fbce3fa286fce1ff, type: 2}
+    - target: {fileID: 4799288518204592, guid: 387016dec2bfff24b9c2a757edc2f4e5, type: 2}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4799288518204592, guid: 4124e70ef05a4054fbce3fa286fce1ff, type: 2}
+    - target: {fileID: 4799288518204592, guid: 387016dec2bfff24b9c2a757edc2f4e5, type: 2}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4799288518204592, guid: 4124e70ef05a4054fbce3fa286fce1ff, type: 2}
+    - target: {fileID: 4799288518204592, guid: 387016dec2bfff24b9c2a757edc2f4e5, type: 2}
       propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4799288518204592, guid: 4124e70ef05a4054fbce3fa286fce1ff, type: 2}
+    - target: {fileID: 4799288518204592, guid: 387016dec2bfff24b9c2a757edc2f4e5, type: 2}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4799288518204592, guid: 4124e70ef05a4054fbce3fa286fce1ff, type: 2}
+    - target: {fileID: 4799288518204592, guid: 387016dec2bfff24b9c2a757edc2f4e5, type: 2}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4799288518204592, guid: 4124e70ef05a4054fbce3fa286fce1ff, type: 2}
+    - target: {fileID: 4799288518204592, guid: 387016dec2bfff24b9c2a757edc2f4e5, type: 2}
       propertyPath: m_RootOrder
       value: 7
       objectReference: {fileID: 0}
-    - target: {fileID: 1983578729775552, guid: 4124e70ef05a4054fbce3fa286fce1ff, type: 2}
-      propertyPath: m_Name
-      value: Portal C
-      objectReference: {fileID: 0}
-    - target: {fileID: 61083106689392024, guid: 4124e70ef05a4054fbce3fa286fce1ff,
+    - target: {fileID: 61083106689392024, guid: 387016dec2bfff24b9c2a757edc2f4e5,
         type: 2}
       propertyPath: m_Size.x
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 114704757596118838, guid: 4124e70ef05a4054fbce3fa286fce1ff,
-        type: 2}
-      propertyPath: destinationPortal
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 114704757596118838, guid: 4124e70ef05a4054fbce3fa286fce1ff,
-        type: 2}
-      propertyPath: sceneToLoad
-      value: 2
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 4124e70ef05a4054fbce3fa286fce1ff, type: 2}
+  m_SourcePrefab: {fileID: 100100000, guid: 387016dec2bfff24b9c2a757edc2f4e5, type: 2}
   m_IsPrefabAsset: 0
 --- !u!1 &66660448
 GameObject:
@@ -12073,7 +12059,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1656528902}
   - component: {fileID: 1656528901}
-  - component: {fileID: 1656528903}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -12109,20 +12094,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1656528903
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1656528900}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62305c9e1e5f5b341ad289b121871947, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wildMonsters:
-  - _base: {fileID: 11400000, guid: 96ac8a6408919cd40a8d307f5ce6e64e, type: 2}
-    level: 6
 --- !u!1 &1768520234
 GameObject:
   m_ObjectHideFlags: 0

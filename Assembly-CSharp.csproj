@@ -70,6 +70,7 @@
      <Compile Include="Assets\Scripts\Core\EssentialObjects.cs" />
      <Compile Include="Assets\Scripts\Core\EssentialObjectsSpawner.cs" />
      <Compile Include="Assets\Scripts\Core\Fader.cs" />
+     <Compile Include="Assets\Scripts\Core\InvisibleTileMap.cs" />
      <Compile Include="Assets\Scripts\Data\ConditionsDB.cs" />
      <Compile Include="Assets\Scripts\GameController.cs" />
      <Compile Include="Assets\Scripts\Gameplay\Dialog.cs" />
@@ -85,6 +86,7 @@
      <Compile Include="Assets\Scripts\Monsters\MonsterParty.cs" />
      <Compile Include="Assets\Scripts\Monsters\Move.cs" />
      <Compile Include="Assets\Scripts\Monsters\MoveBase.cs" />
+     <Compile Include="Assets\Scripts\SceneManagement\LocationPortal.cs" />
      <Compile Include="Assets\Scripts\SceneManagement\Portal.cs" />
      <Compile Include="Assets\Scripts\SceneManagement\SceneDetails.cs" />
      <Compile Include="Assets\Scripts\Util\EnumExtensions.cs" />
