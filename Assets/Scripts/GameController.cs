@@ -12,6 +12,22 @@ public enum GameState
 }
 
 public class GameController : MonoBehaviour {
+  // psvita controller
+  private const string joystick1 = "joystick 1 button ";
+  private const int CROSS = 0;
+  private const int CIRCLE = 1;
+  private const int SQUARE = 2;
+  private const int TRIANGLE = 3;
+  private const int L = 4;
+  private const int R = 5;
+  private const int SELECT = 6;
+  private const int START = 7;
+  private const int UP = 8;
+  private const int RIGHT = 9;
+  private const int DOWN = 10;
+  private const int LEFT = 11;
+  // ======================================================
+
   [SerializeField] PlayerController playerController;
   [SerializeField] BattleSystem battleSystem;
   [SerializeField] Camera worldCamera;
@@ -96,6 +112,17 @@ public class GameController : MonoBehaviour {
 	private void Update(){
 		if (state == GameState.FreeRoam){
       playerController.HandleUpdate();
+
+      // save game via buttons only in the map
+      if(Input.GetKeyDown(joystick1 + L) || Input.GetKeyDown(KeyCode.Keypad8))
+        SavingSystem.i.Save("saveSlot1");
+
+      // load game via buttons only in the map
+      if(Input.GetKeyDown(joystick1 + R) || Input.GetKeyDown(KeyCode.Keypad9)){
+        SavingSystem.i.Load("saveSlot1");
+        Debug.Log("L");
+      }
+
     }else if (state == GameState.Battle){
       battleSystem.HandleUpdate();
     }else if (state == GameState.Dialog){
