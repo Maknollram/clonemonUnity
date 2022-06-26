@@ -2,6 +2,7 @@ PSP2
 PlayerPath?
 C:/Users/Maknollram/Documents/Clonemon/clonemon
 SceneListBegin?
+Assets/Scenes/Gameplay.unity
 Assets/Scenes/HomeTown.unity
 Assets/Scenes/Route1.unity
 Assets/Scenes/HomeTownHouse1.unity

@@ -73,7 +73,11 @@ public class SavingSystem : MonoBehaviour
 
     void SaveFile(string saveFile, Dictionary<string, object> state)
     {
+        // here can choose a path like string path = GetPath("D:/temp\\save");
+        // D:/temp location and \\save the file
         string path = GetPath(saveFile);
+        //  to save on psvita
+        // string path = GetPath("ux0:/clonemonSaves\\saveSlot1");
         print($"saving to {path}");
 
         using (FileStream fs = File.Open(path, FileMode.Create))
@@ -86,7 +90,11 @@ public class SavingSystem : MonoBehaviour
 
     Dictionary<string, object> LoadFile(string saveFile)
     {
+        // here can choose a path like string path = GetPath("D:/temp\\save");
+        // D:/temp location and \\save the file
         string path = GetPath(saveFile);
+        //  to save on psvita
+        // string path = GetPath("ux0:/clonemonSaves\\saveSlot1");
         if (!File.Exists(path))
             return new Dictionary<string, object>();
 
